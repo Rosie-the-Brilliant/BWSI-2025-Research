@@ -37,7 +37,7 @@ class Predictor(object):
             return False
 
     def get_probs(self, img_):
-        if self.is_model_loaded and self.net is not None:
+        if self.is_model_loaded:
             img_ = self.transforms(img_).float().unsqueeze(0).to(self.device)
             with torch.no_grad():
                 outputs = self.net(img_)
