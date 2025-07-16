@@ -54,7 +54,7 @@ class BaseModel(nn.Module):
         
         x_s = torch.sum(x_s,1) # simple: get sum of class probabilities along vehicle storage
 
-        x = torch.concat([x_v,x_p,x_s,x_a],axis=1)
+        x = torch.cat([x_v, x_p, x_s, x_a], dim=1)
         return x
 
 class ActorCritic(nn.Module):
@@ -231,8 +231,9 @@ class PPO:
         for i in self.buffer.states:
             for key in old_states.keys():
                 old_states[key].append(i[key])
+        old_states_tensor = {}
         for key in old_states.keys():
-            old_states[key] = torch.squeeze(torch.stack(old_states[key], dim=0)).detach().to(device)
+            old_states_tensor[key] = torch.squeeze(torch.stack(old_states[key], dim=0)).detach().to(device)
 #         old_states = torch.squeeze(torch.stack(self.buffer.states, dim=0)).detach().to(device)
         old_actions = torch.squeeze(torch.stack(self.buffer.actions, dim=0)).detach().to(device)
         old_logprobs = torch.squeeze(torch.stack(self.buffer.logprobs, dim=0)).detach().to(device)
@@ -245,7 +246,7 @@ class PPO:
         for _ in range(self.K_epochs):
 
             # Evaluating old actions and values
-            logprobs, state_values, dist_entropy = self.policy.evaluate(old_states, old_actions)
+            logprobs, state_values, dist_entropy = self.policy.evaluate(old_states_tensor, old_actions)
 
             # match state_values tensor dimensions with rewards tensor
             state_values = torch.squeeze(state_values)

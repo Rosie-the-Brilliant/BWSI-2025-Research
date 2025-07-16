@@ -1,4 +1,7 @@
+import sys
 import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 import glob
 import time
 from datetime import datetime
@@ -8,7 +11,7 @@ import numpy as np
 
 import gym
 
-from models.PPO import PPO
+from Enhanced.models.PPO import PPO
 
 def train(env):
     print("============================================================================================")
@@ -236,4 +239,5 @@ def train(env):
 
 
 if __name__ == '__main__':
-    train()
+    env = gym.make("CartPole-v1")  # or your custom environment
+    train(env)

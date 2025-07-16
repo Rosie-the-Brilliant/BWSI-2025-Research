@@ -161,15 +161,10 @@ class ScoreKeeper(object):
     def get_cumulative_reward(self):
         """
         returns cumulative reward (current score)
-        Note: the score can be denoted as anything, not set in stone
+        Only counts finalized saved/killed from SCRAM actions or direct kills
+        People in ambulance are NOT counted until SCRAM happens
         """
-        killed = self.scorekeeper["killed"]
-        saved = self.scorekeeper["saved"] 
-        if self.ambulance["zombie"] > 0:
-            killed += self.ambulance["injured"] + self.ambulance["healthy"]
-        else:
-            saved += self.ambulance["injured"] + self.ambulance["healthy"]
-        return saved - killed
+        return self.scorekeeper["saved"] - self.scorekeeper["killed"]
 
     def get_current_capacity(self):
         return sum(self.ambulance.values())
@@ -178,6 +173,16 @@ class ScoreKeeper(object):
         return sum(self.ambulance.values()) >= self.capacity
 
     def get_score(self):
+        """
+        Returns the current score without automatically SCRAMming
+        Use get_final_score() if you want to SCRAM and get final results
+        """
+        return self.scorekeeper
+    
+    def get_final_score(self):
+        """
+        SCRAMs and returns the final score including ambulance contents
+        """
         self.scram()
         return self.scorekeeper
     

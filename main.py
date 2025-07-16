@@ -4,11 +4,22 @@ from endpoints.data_parser import DataParser
 from endpoints.heuristic_interface import HeuristicInterface
 from endpoints.training_interface import TrainInterface
 from endpoints.inference_interface import InferInterface
-
+from endpoints.llm_interface import LLMInterface
 from gameplay.scorekeeper import ScoreKeeper
 from gameplay.ui import UI
 from gameplay.enums import ActionCost
 from model_training.rl_training import train
+from gameplay.performance_tracker import PerformanceTracker
+
+def action_cost_to_string(action_cost):
+    """Convert ActionCost enum to string representation"""
+    action_mapping = {
+        ActionCost.SAVE: "SAVE",
+        ActionCost.SQUISH: "SQUISH", 
+        ActionCost.SKIP: "SKIP",
+        ActionCost.SCRAM: "SCRAM"
+    }
+    return action_mapping.get(action_cost, str(action_cost))
 
 
 class Main(object):
@@ -16,15 +27,13 @@ class Main(object):
     Base class for the SGAI 2023 game
     """
     def __init__(self, mode, log):
-        self.data_fp = os.getenv("SGAI_DATA", default='data')
+        self.data_fp = os.path.join(os.path.dirname(__file__), 'data')
         self.data_parser = DataParser(self.data_fp)
-
         shift_length = 720
         capacity = 10
         self.scorekeeper = ScoreKeeper(shift_length, capacity)
 
         if mode == 'heuristic':   # Run in background until all humanoids are processed
-            # TODO investigate why this just kills everything (follow humanoid to prediction to actions to scorekeeper)
             simon = HeuristicInterface(None, None, None, display = False)
             while len(self.data_parser.unvisited) > 0:
                 if self.scorekeeper.remaining_time <= 0:
@@ -63,19 +72,68 @@ class Main(object):
                 self.scorekeeper.save_log()
             print("RL equiv reward:",self.scorekeeper.get_cumulative_reward())
             print(self.scorekeeper.get_score())
-        else: # Launch UI gameplay
-            self.ui = UI(self.data_parser, self.scorekeeper, self.data_fp, log = log, suggest = False)
-
-
+        elif mode == 'llm':  # LLM agent (multimodal LLaVA by default)
+            print("Starting LLM agent (LLaVA multimodal)...")
+            
+            # Initialize performance tracker (will load existing data)
+            tracker = PerformanceTracker()
+            tracker.start_new_run(mode)
+            
+            llm_agent = LLMInterface(self.data_parser, self.scorekeeper, self.data_fp)
+            while len(self.data_parser.unvisited) > 0:
+                if self.scorekeeper.remaining_time <= 0:
+                    print('Ran out of time')
+                    break
+                else:
+                    humanoid = self.data_parser.get_random()
+                    action = llm_agent.get_model_suggestion(humanoid, self.scorekeeper.at_capacity())
+                    
+                    
+                    # Log the decision
+                    tracker.log_decision(humanoid, action, self.scorekeeper)
+                    
+                    if action == ActionCost.SKIP:
+                        self.scorekeeper.skip(humanoid)
+                    elif action == ActionCost.SQUISH:
+                        self.scorekeeper.squish(humanoid)
+                    elif action == ActionCost.SAVE:
+                        self.scorekeeper.save(humanoid)
+                    elif action == ActionCost.SCRAM:
+                        self.scorekeeper.scram(humanoid)
+                    else:
+                        raise ValueError("Invalid action suggested")
+            
+            if log:
+                self.scorekeeper.save_log()
+            
+            # End tracking and generate graphs
+            tracker.end_run(self.scorekeeper)
+            
+            print("LLM agent reward:",self.scorekeeper.get_cumulative_reward())
+            print(self.scorekeeper.get_score())
+            
+            # Ask for reasoning if never SCRAMmed
+            if self.scorekeeper.ambulance["healthy"] > 0 or self.scorekeeper.ambulance["injured"] > 0:
+                print("\n🤔 Asking LLM why it never SCRAMmed...")
+                
+                # Get LLM reasoning
+                reasoning = llm_agent.ask_for_reasoning(
+                    humanoid=None, 
+                    action=ActionCost.SCRAM, 
+                    prompt_data = None,
+                    at_capacity=self.scorekeeper.at_capacity()
+                )
+                print(f"💭 LLM Reasoning: {reasoning}")
+            
+            # Print performance summary
+            tracker.print_summary()
+        
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog='python3 main.py',
         description='What the program does',
         epilog='Text at the bottom of help')
-    parser.add_argument('-m', '--mode', type=str, default = 'user', choices = ['user','heuristic','train','infer'],)
+    parser.add_argument('-m', '--mode', type=str, default = 'user', choices = ['user','heuristic','train','infer','llm'], help='llm=multimodal LLM agent (default)')
     parser.add_argument('-l', '--log', type=bool, default = False)
-    # parser.add_argument('-a', '--automode', action='store_true', help='No UI, run autonomously with model suggestions')
-    # parser.add_argument('-d', '--disable', action='store_true', help='Disable model help')
-
     args = parser.parse_args()
     Main(args.mode, args.log)
