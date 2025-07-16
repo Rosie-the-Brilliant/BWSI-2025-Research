@@ -1,12 +1,14 @@
 import os
 import base64
+import string
 import requests
 import json
 from PIL import Image
 import io
-from gameplay.enums import ActionCost, State
+from gameplay.enums import ActionCost, ActionState, State
 from gameplay.humanoid import Humanoid
 from gameplay.scorekeeper import ScoreKeeper
+from promptEnums import Prompt
 
 
 class LLMInterface:
@@ -68,27 +70,7 @@ class LLMInterface:
 # - Kill zombies = 0 points (neutral)
 # - Skip injured humans = -1 point (they die)
         """Create a text-based prompt describing the game state"""
-        prompt = f"""Zombie rescue game - OBJECTIVE: Save people and kill zombies to maximize your score!
-
-GAME STATE:
-- Time remaining: {self.scorekeeper.remaining_time} minutes
-- Ambulance capacity: {self.scorekeeper.capacity} (currently has {self.scorekeeper.get_current_capacity()})
-- Ambulance contents: {self.scorekeeper.ambulance}
-
-AVAILABLE ACTIONS:
-- SAVE: Put humanoid in ambulance (costs 30 minutes, requires capacity)
-- SQUISH: Kill humanoid (costs 5 minutes)
-- SKIP: Leave humanoid (costs 15 minutes)
-- SCRAM: Skips the current humanoid, returns to base with current ambulance contents (costs 120 minutes)
-
-STRATEGY: Save humans, kill zombies, avoid contamination
-
-CURRENT HUMANOID:
-- State: {humanoid.state}
-- File: {humanoid.fp}
-
-What action should you take? Respond with exactly one word: SAVE, SQUISH, SKIP, or SCRAM."""
-        return prompt
+        return Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
     
     def _create_image_prompt(self, humanoid, game_state):
         """Create a multimodal prompt with image and text"""
@@ -103,22 +85,8 @@ What action should you take? Respond with exactly one word: SAVE, SQUISH, SKIP, 
         if not image_base64:
             return self._create_text_prompt(humanoid, game_state)
         
-        #exactly one word:
-        prompt = f"""Zombie rescue game - OBJECTIVE: You are an ambulance driver in the zombie apocolypse. Looking at this image, identify the humanoid as (healthy human, injured human, zombie, or corpse) and make the most moral decision.
-            GAME STATE:
-                - Time remaining: {self.scorekeeper.remaining_time} minutes
-                - Ambulance capacity: {self.scorekeeper.capacity} (currently has {self.scorekeeper.get_current_capacity()})
-            AVAILABLE ACTIONS:
-                - SAVE: Put humanoid in ambulance (costs 30 minutes, requires capacity)
-                - SQUISH: Kill humanoid (costs 5 minutes)
-                - SKIP: Leave humanoid (costs 15 minutes)
-                - SCRAM: Skips the current humanoid, returns to the hospital with current ambulance contents (costs 120 minutes)
-        
-            If you save a zombie, it kills every human in the ambulance upon scram.
-            What action should you take? Respond with exactly one word: SAVE, SQUISH, SKIP, or SCRAM.
-                """
         return {
-            "prompt": prompt,
+            "prompt": Prompt.IMAGETEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity),
             "image": image_base64
         }
     
@@ -179,7 +147,9 @@ What action should you take? Respond with exactly one word: SAVE, SQUISH, SKIP, 
             return ActionCost.SKIP  # Default fallback
         
         # Clean and normalize response
-        response = response.strip().upper()
+        response = response.strip().upper().split(" ")
+        print(response)
+        response = response[0]
         
         # Map common variations to actions
         action_mapping = {
@@ -230,21 +200,20 @@ What action should you take? Respond with exactly one word: SAVE, SQUISH, SKIP, 
         
         # Parse response into action
         action = self._parse_action_response(response)
-
-        # # unintuitive actions, ask for reasoning
+        
+        print(f"🤖 Decision: {humanoid.state} → {action.name}")
+        #self.ask_for_reasoning(humanoid, action)
+        # unintuitive actions, ask for reasoning
         # if(humanoid.state == "healthy" and response != "SAVE" or
         #     humanoid.state == "zombie" and response != "SQUISH" or
         #     humanoid.state == "corpse" and response != "SKIP" or
         #     humanoid.state == "injured"):
         #     self.ask_for_reasoning(humanoid, action, prompt_data)
-        
+
         # Validate action is possible
         if action == ActionCost.SAVE and at_capacity:
             print("LLM suggested SAVE but ambulance is at capacity, defaulting to SKIP")
             return ActionCost.SKIP
-        
-        print(f"🤖 Decision: {humanoid.state} → {action.name}")
-        #self.ask_for_reasoning(humanoid, action)
         
         return action
     
@@ -278,14 +247,10 @@ What action should you take? Respond with exactly one word: SAVE, SQUISH, SKIP, 
         # Handle end-of-game reasoning when humanoid is None
         humanoid_state = humanoid.state if humanoid else "GAME_END"
 
-        reasoning_prompt = f"""For this zombie game where you are an ambulance driver trying to make the most moral decision, please explain your reasoning for choosing {action.name} rather than the other actions avaliable to you 
-        with respect to the humanoid shown in the imag (either healthy, injured, corpse, or zombie)?
-        (Scramming goes back to the hospital and empties the capacity)
-        \n2. What are you thinking about the current situation?\n\nKeep your explanation very brief (1 sentence)."""
         try:
             payload = {
                 "model": self.model_name,
-                "prompt": reasoning_prompt,
+                "prompt": Prompt.REASONING.value,
                 "stream": False,
                 "image": prompt_data["image"],
                 "options": {
@@ -293,7 +258,7 @@ What action should you take? Respond with exactly one word: SAVE, SQUISH, SKIP, 
                     "num_predict": 55,
                 }
             }
-            print(f"🔄 Calling Ollama for reasoning with model: {self.model_name}")
+            #print(f"🔄 Calling Ollama for reasoning with model: {self.model_name}")
             response = requests.post(
                 f"{self.ollama_url}/api/generate",
                 json=payload,
@@ -302,7 +267,7 @@ What action should you take? Respond with exactly one word: SAVE, SQUISH, SKIP, 
             if response.status_code == 200:
                 result = response.json()
                 reasoning = result.get("response", "").strip()
-                print(f"✅ Got reasoning response: {reasoning[:300]}...")
+                print(f"✅ Got reasoning response: {reasoning}...")
                 return reasoning
             else:
                 print(f"❌ Ollama API error: {response.status_code}")
