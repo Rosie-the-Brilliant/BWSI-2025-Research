@@ -35,10 +35,11 @@ class Prompt(Enum):
 
         The first four images are, respectively: a HEALTHY humanoid, an INJURED humanoid. a CORPSE humanoid, and a ZOMBIE humanoid.
         
-        With respect to the last image, respond with exactly one word: What action should you take on this humanoid? Respond with either: SAVE, SQUISH, SKIP, or SCRAM.
+        With respect to the VERY LAST image, respond with exactly one word: What action should you take on this humanoid? Respond with either: SAVE, SQUISH, SKIP, or SCRAM.
             """
 
-    IDENTIFY = " The first four images are, respectively: a HEALTHY humanoid, an INJURED humanoid. a CORPSE humanoid, and a ZOMBIE humanoid. Tell me in one word, what the state of the humanoid in the last image is, either: HEALTHY, INJURED, CORPSE, or ZOMBIE "
+    IDENTIFY = """ The first four images are, respectively: a HEALTHY humanoid, an INJURED humanoid. a CORPSE humanoid, and a ZOMBIE humanoid. 
+    Tell me in one word, what the state of the humanoid in the VERY LAST image is, either: HEALTHY, INJURED, CORPSE, or ZOMBIE """
     
 
     REASONING = """ You are an ambulance driver trying to make the most moral decision in the zombie apocolypse.
