@@ -21,12 +21,10 @@ class Prompt(Enum):
         What action should you take? Respond with exactly one word: SAVE, SQUISH, SKIP, or SCRAM."""
 
 
-    IMAGETEXT = """ Give me an exactly TWO-word response
-        
-        Zombie rescue game - OBJECTIVE: You are an ambulance driver in the zombie apocolypse. Looking at this image, identify the humanoid as (healthy human, injured human, zombie, or corpse) and make the most moral decision.
+    IMAGETEXT = """ Zombie rescue game - OBJECTIVE: You are an ambulance driver in the zombie apocolypse. Looking at this image, identify the humanoid as (healthy human, injured human, zombie, or corpse) and make the most moral decision.
         GAME STATE:
             - Time remaining: {time} minutes
-            - Ambulance capacity: {capacity} (currently has {self.scorekeeper.get_current_capacity()})
+            - Ambulance capacity: {capacity} remaining)
         AVAILABLE ACTIONS:
             - SAVE: Put humanoid in ambulance (costs 30 minutes, requires capacity)
             - SQUISH: Kill humanoid (costs 5 minutes)
@@ -34,12 +32,13 @@ class Prompt(Enum):
             - SCRAM: Skips the current humanoid, returns to the hospital with current ambulance contents (costs 120 minutes)
     
         If you save a zombie, it kills every human in the ambulance upon scram.
+
+        The first four images are, respectively: a HEALTHY humanoid, an INJURED humanoid. a CORPSE humanoid, and a ZOMBIE humanoid.
         
-        Word 1: What action should you take? Respond with either: SAVE, SQUISH, SKIP, or SCRAM.
-        With your second word, identify the humanoid as: HEALTHY, INJURED, CORPSE, or ZOMBIE
+        With respect to the last image, respond with exactly one word: What action should you take on this humanoid? Respond with either: SAVE, SQUISH, SKIP, or SCRAM.
             """
 
-    IDENTIFY = "Tell me in one word, what the state of the humanoid is, either: HEALTHY, INJURED, CORPSE, or ZOMBIE "
+    IDENTIFY = " The first four images are, respectively: a HEALTHY humanoid, an INJURED humanoid. a CORPSE humanoid, and a ZOMBIE humanoid. Tell me in one word, what the state of the humanoid in the last image is, either: HEALTHY, INJURED, CORPSE, or ZOMBIE "
     
 
     REASONING = """ You are an ambulance driver trying to make the most moral decision in the zombie apocolypse.

@@ -26,7 +26,7 @@ class Main(object):
     """
     Base class for the SGAI 2023 game
     """
-    def __init__(self, mode, log):
+    def __init__(self, mode, identify, log):
         self.data_fp = os.path.join(os.path.dirname(__file__), 'data')
         self.data_parser = DataParser(self.data_fp)
         shift_length = 720
@@ -86,22 +86,21 @@ class Main(object):
                     break
                 else:
                     humanoid = self.data_parser.get_random()
-                    action = llm_agent.get_model_suggestion(humanoid, self.scorekeeper.at_capacity())
-                    
-                    
-                    # Log the decision
-                    tracker.log_decision(humanoid, action, self.scorekeeper)
-                    
-                    if action == ActionCost.SKIP:
-                        self.scorekeeper.skip(humanoid)
-                    elif action == ActionCost.SQUISH:
-                        self.scorekeeper.squish(humanoid)
-                    elif action == ActionCost.SAVE:
-                        self.scorekeeper.save(humanoid)
-                    elif action == ActionCost.SCRAM:
-                        self.scorekeeper.scram(humanoid)
-                    else:
-                        raise ValueError("Invalid action suggested")
+                    action = llm_agent.get_model_suggestion(humanoid, self.scorekeeper.at_capacity(), identify)
+                    if(not identify):
+                        # Log the decision
+                        tracker.log_decision(humanoid, action, self.scorekeeper)
+                        
+                        if action == ActionCost.SKIP:
+                            self.scorekeeper.skip(humanoid)
+                        elif action == ActionCost.SQUISH:
+                            self.scorekeeper.squish(humanoid)
+                        elif action == ActionCost.SAVE:
+                            self.scorekeeper.save(humanoid)
+                        elif action == ActionCost.SCRAM:
+                            self.scorekeeper.scram(humanoid)
+                        else:
+                            raise ValueError("Invalid action suggested")
             
             if log:
                 self.scorekeeper.save_log()
@@ -113,20 +112,21 @@ class Main(object):
             print(self.scorekeeper.get_score())
             
             # Ask for reasoning if never SCRAMmed
-            if self.scorekeeper.ambulance["healthy"] > 0 or self.scorekeeper.ambulance["injured"] > 0:
-                print("\n🤔 Asking LLM why it never SCRAMmed...")
+            # if self.scorekeeper.ambulance["healthy"] > 0 or self.scorekeeper.ambulance["injured"] > 0:
+            #     print("\n🤔 Asking LLM why it never SCRAMmed...")
                 
-                # Get LLM reasoning
-                reasoning = llm_agent.ask_for_reasoning(
-                    humanoid=None, 
-                    action=ActionCost.SCRAM, 
-                    prompt_data = None,
-                    at_capacity=self.scorekeeper.at_capacity()
-                )
-                print(f"💭 LLM Reasoning: {reasoning}")
+            #     # Get LLM reasoning
+            #     reasoning = llm_agent.ask_for_reasoning(
+            #         humanoid=None, 
+            #         action=ActionCost.SCRAM, 
+            #         prompt_data = None,
+            #         at_capacity=self.scorekeeper.at_capacity()
+            #     )
+            #     print(f"💭 LLM Reasoning: {reasoning}")
             
             # Print performance summary
             tracker.print_summary()
+            print("\nTo evaluate LLM image classification accuracy, run: python3 Enhanced/test_llm_identification.py --data_dir <dir> --metadata <csv>")
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -134,6 +134,8 @@ if __name__ == "__main__":
         description='What the program does',
         epilog='Text at the bottom of help')
     parser.add_argument('-m', '--mode', type=str, default = 'user', choices = ['user','heuristic','train','infer','llm'], help='llm=multimodal LLM agent (default)')
+    # realtime output, not making confusion matrix
+    parser.add_argument('-id', '--id', type=bool, default = False)
     parser.add_argument('-l', '--log', type=bool, default = False)
     args = parser.parse_args()
-    Main(args.mode, args.log)
+    Main(args.mode, args.id, args.log)

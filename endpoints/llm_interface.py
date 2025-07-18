@@ -8,7 +8,7 @@ import io
 from gameplay.enums import ActionCost, ActionState, State
 from gameplay.humanoid import Humanoid
 from gameplay.scorekeeper import ScoreKeeper
-from promptEnums import Prompt
+from LLM.promptEnums import Prompt
 
 
 class LLMInterface:
@@ -61,33 +61,31 @@ class LLMInterface:
             print(f"Error encoding image {image_path}: {e}")
             return None
     
-    def _create_text_prompt(self, humanoid, game_state):
-#SCORING SYSTEM:
-# - Reward = (People Saved) - (People Killed)
-# - Higher score = Better performance
-# - Save healthy/injured humans = +1 point each
-# - Kill healthy/injured humans = -1 point each  
-# - Kill zombies = 0 points (neutral)
-# - Skip injured humans = -1 point (they die)
-        """Create a text-based prompt describing the game state"""
-        return Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
-    
-    def _create_image_prompt(self, humanoid, game_state):
+    def _create_image_prompt(self, humanoid, identify=False):
         """Create a multimodal prompt with image and text"""
         image_path = os.path.join(self.img_data_root, humanoid.fp)
         
         if not os.path.exists(image_path):
             print(f"Warning: Image not found at {image_path}, falling back to text prompt")
-            return self._create_text_prompt(humanoid, game_state)
+            return Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
         
         # Encode image to base64
         image_base64 = self._encode_image_to_base64(image_path)
+        base_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'consolidated_dataset')
+        healthy_path = os.path.join(self.img_data_root, 'consolidated_dataset/test_00000.png')
+        injured_path = os.path.join(self.img_data_root, 'consolidated_dataset/test_00169.png')
+        corpse_path = os.path.join(self.img_data_root, 'consolidated_dataset/test_00173.png')
+        zombie_path = os.path.join(self.img_data_root, 'consolidated_dataset/test_00177.png')
+        
+        if not os.path.exists(healthy_path):
+            print(f"Warning: Image not found at {healthy_path}, falling back to text prompt")
+
         if not image_base64:
-            return self._create_text_prompt(humanoid, game_state)
+            return Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
         
         return {
-            "prompt": Prompt.IMAGETEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity),
-            "image": image_base64
+            "prompt": Prompt.IDENTIFY.value if (identify) else Prompt.IMAGETEXT.value.format(time=self.scorekeeper.remaining_time, capacity=(self.scorekeeper.capacity-self.scorekeeper.get_current_capacity())),
+            "images": [self._encode_image_to_base64(image) for image in (healthy_path, injured_path, corpse_path, zombie_path, image_path)]
         }
     
     def _call_ollama_api(self, prompt_data):
@@ -98,8 +96,11 @@ class LLMInterface:
                 payload = {
                     "model": self.model_name,
                     "prompt": prompt_data["prompt"],
-                    "images": [prompt_data["image"]],
-                    "stream": False
+                    "images": prompt_data["images"],
+                    "stream": False,
+                    "options": {
+                        "num_predict": 20,
+                    }
                 }
             else:
                 # Text-only request
@@ -120,7 +121,7 @@ class LLMInterface:
             
             if response.status_code == 200:
                 result = response.json()
-                response_text = result.get("response", "").strip().upper()
+                response_text = result.get("response", "").strip()
                 #print(f"✅ Ollama response: {response_text}")
                 return response_text
             else:
@@ -147,8 +148,8 @@ class LLMInterface:
             return ActionCost.SKIP  # Default fallback
         
         # Clean and normalize response
+        # print(response)
         response = response.strip().upper().split(" ")
-        print(response)
         response = response[0]
         
         # Map common variations to actions
@@ -178,7 +179,7 @@ class LLMInterface:
         print(f"Could not parse LLM response '{response}', defaulting to SKIP")
         return ActionCost.SKIP
     
-    def get_model_suggestion(self, humanoid, at_capacity=False):
+    def get_model_suggestion(self, humanoid, at_capacity=False, identify=False):
         """
         Get action suggestion from LLM for the given humanoid
         
@@ -191,16 +192,24 @@ class LLMInterface:
         """
         # Create appropriate prompt based on mode
         if self.use_images:
-            prompt_data = self._create_image_prompt(humanoid, self.scorekeeper)
+            prompt_data = self._create_image_prompt(humanoid, identify)
+
         else:
-            prompt_data = self._create_text_prompt(humanoid, self.scorekeeper)
+            prompt_data = Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
         
         # Get LLM response
         response = self._call_ollama_api(prompt_data)
+        if response is None:
+            print("❌ LLM API call failed or returned no response.")
+            return "UNKNOWN"
+        response = response.upper()
+
+        if(identify):
+            # print(f"Humanoid: {humanoid.state} \n🤖 Guess: {response}")
+            return response
         
         # Parse response into action
         action = self._parse_action_response(response)
-        
         print(f"🤖 Decision: {humanoid.state} → {action.name}")
         #self.ask_for_reasoning(humanoid, action)
         # unintuitive actions, ask for reasoning
@@ -217,6 +226,7 @@ class LLMInterface:
         
         return action
     
+    #unused
     def act(self, humanoid):
         """
         Take action on humanoid using LLM suggestion
