@@ -1,4 +1,6 @@
-# SGAI_2025
+# SGAI_2025 
+## Special Research Student Project
+## LLM Player of Baseline Game
 
 Dependencies:
 - Pandas
