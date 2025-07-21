@@ -83,6 +83,7 @@ class Main(object):
             while len(self.data_parser.unvisited) > 0:
                 if self.scorekeeper.remaining_time <= 0:
                     print('Ran out of time')
+                    self.scorekeeper.scram()
                     break
                 else:
                     humanoid = self.data_parser.get_random()

@@ -24,7 +24,7 @@ class Prompt(Enum):
 
     REASONING = """Explain your reasoning for choosing {action.name} out of (SKIP, SCRAM, SQUISH, SAVE) on {humanoid}
             (Scramming goes back to the hospital and empties the capacity)
-            \n\nKeep your explanation extremely brief."""
+            Keep your explanation extremely brief (1 sentence)."""
 
 class Context(Enum):
 
@@ -32,10 +32,12 @@ class Context(Enum):
     TEXT = """Zombie rescue game. You are an ambulance driver. - OBJECTIVE: Make the most moral decision
     
         AVAILABLE ACTIONS:
-        - SAVE: Put humanoid in ambulance (costs 30 minutes, requires capacity). Saving a zombie kills everyone currently in the ambulance.
+        - SAVE: Put humanoid in ambulance (costs 30 minutes, requires capacity). 
         - SQUISH: Kill humanoid (costs 5 minutes)
         - SKIP: Leave humanoid (costs 15 minutes)
         - SCRAM: Skips the current humanoid, returns to base with current ambulance contents (costs 120 minutes). Empties the ambulance.
+
+        Saving a zombie kills everyone in the ambulance.
         """
 
     IMAGETEXT = """ Zombie rescue game - You are an ambulance driver 

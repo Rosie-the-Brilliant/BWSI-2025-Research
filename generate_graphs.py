@@ -60,7 +60,7 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     
     # Set up the plotting style
     plt.style.use('default')
-    fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+    fig, axes = plt.subplots(1, 3, figsize=(24, 6))
     fig.suptitle('LLM Agent Performance Analysis', fontsize=16, fontweight='bold')
     
     # Extract data for plotting
@@ -68,7 +68,6 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     rewards = [run['final_reward'] for run in performance_data]
     saved_counts = [run['final_saved'] for run in performance_data]
     killed_counts = [run['final_killed'] for run in performance_data]
-    llm_percentages = [run.get('llm_call_percentage', 0) for run in performance_data]
     
     # 1. Reward over time, colored by images
     df = pd.DataFrame(performance_data)
@@ -102,32 +101,35 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     jitter = 0.15
     for (saved, killed), count in pair_counts.items():
         # Add small random jitter for each point
-        x = saved + np.random.uniform(-jitter, jitter, size=count)
-        y = killed + np.random.uniform(-jitter, jitter, size=count)
+        y = saved + np.random.uniform(-jitter, jitter, size=count)
+        x = killed + np.random.uniform(-jitter, jitter, size=count)
         axes[1].scatter(x, y, color='blue', alpha=0.7, s=50)
         if count > 1:
             # Annotate the center point with the count
             axes[1].annotate(str(count), (saved, killed), textcoords="offset points", xytext=(5,5), ha='center', fontsize=10, color='red')
     axes[1].set_title('Saved vs Killed')
-    axes[1].set_xlabel('Number Saved')
-    axes[1].set_ylabel('Number Killed')
+    axes[1].set_ylabel('Number Saved')
+    axes[1].set_xlabel('Number Killed')
     axes[1].grid(True, alpha=0.3)
     # Add diagonal line (reward = 0)
     max_val = max(max(saved_counts), max(killed_counts))
     axes[1].plot([0, max_val], [0, max_val], 'k--', alpha=0.5, label='Reward = 0')
     axes[1].legend()
     
-    # 3. LLM Call Percentage
-    if any(llm_percentages):
-        axes[2].scatter(run_ids, llm_percentages, color='blue', alpha=0.7, s=50)
-        axes[2].set_title('LLM Call Percentage')
-        axes[2].set_xlabel('Run ID')
-        axes[2].set_ylabel('LLM Calls (%)')
-        axes[2].grid(True, alpha=0.3)
-    else:
-        axes[2].text(0.5, 0.5, 'No LLM call data available', 
-                       ha='center', va='center', transform=axes[2].transAxes)
-        axes[2].set_title('LLM Call Percentage')
+    # 4. Overlapping line graphs for action frequencies over run number
+    action_names = ["SAVE", "SQUISH", "SKIP", "SCRAM"]
+    action_freqs = {action: [] for action in action_names}
+    for run in performance_data:
+        af = run.get('action_frequencies', {})
+        for action in action_names:
+            action_freqs[action].append(af.get(action, 0))
+    for action in action_names:
+        axes[2].plot(run_ids, action_freqs[action], marker='o', label=action)
+    axes[2].set_title('Action Frequencies by Run')
+    axes[2].set_xlabel('Run ID')
+    axes[2].set_ylabel('Count')
+    axes[2].legend(title='Action')
+    axes[2].grid(True, alpha=0.3)
     
     # Save the plot
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -155,7 +157,6 @@ def save_summary_csv(performance_data, save_dir):
             'final_saved': run['final_saved'],
             'final_killed': run['final_killed'],
             'total_decisions': run['total_decisions'],
-            'llm_call_percentage': run.get('llm_call_percentage', 0)
         })
     
     df = pd.DataFrame(summary_data)

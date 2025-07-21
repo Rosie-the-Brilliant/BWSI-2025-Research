@@ -100,7 +100,6 @@ class LLMInterface:
         """Call Ollama API and get response"""
         try:
             if self.use_images and isinstance(prompt_data, dict):
-                print("I'm using images")
                 # Multimodal request with image
                 #length = len(prompt_data["image"])
                 #print(prompt_data["image"][length//2:length//2+10])
@@ -246,8 +245,8 @@ class LLMInterface:
         #     humanoid.state == "zombie" and response != "SQUISH" or
         #     humanoid.state == "corpse" and response != "SKIP" or
         #     humanoid.state == "injured"):
-        if(humanoid.state == "zombie" and response != "SQUISH"):
-            self.ask_for_reasoning(humanoid, action, prompt_data)
+        # if(humanoid.state == "zombie" and response != "SQUISH"):
+        #     self.ask_for_reasoning(humanoid, action, prompt_data)
 
         # Validate action is possible
         if action == ActionCost.SAVE and at_capacity:

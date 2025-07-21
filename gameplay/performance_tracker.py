@@ -173,9 +173,9 @@ class PerformanceTracker:
         # Print each run
         for run in self.performance_data:
             print(f"Run {run['run_id']} (llm): Reward={run['final_reward']}, Saved={run['final_saved']}, Killed={run['final_killed']}")
-            if hasattr(self, 'action_counts'):
+            if 'action_frequencies' in run:
                 print("Action frequencies this run:")
-                for action, count in self.action_counts.items():
+                for action, count in run['action_frequencies'].items():
                     print(f"  {action}: {count}")
         
         print("="*50) 
