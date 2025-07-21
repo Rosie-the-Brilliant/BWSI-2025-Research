@@ -77,9 +77,9 @@ class Main(object):
             
             # Initialize performance tracker (will load existing data)
             tracker = PerformanceTracker()
-            tracker.start_new_run(mode)
+            llm_agent = LLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=args.images)
+            tracker.start_new_run(mode, images=args.images)
             
-            llm_agent = LLMInterface(self.data_parser, self.scorekeeper, self.data_fp)
             while len(self.data_parser.unvisited) > 0:
                 if self.scorekeeper.remaining_time <= 0:
                     print('Ran out of time')
@@ -128,6 +128,10 @@ class Main(object):
             tracker.print_summary()
             print("\nTo evaluate LLM image classification accuracy, run: python3 Enhanced/test_llm_identification.py --data_dir <dir> --metadata <csv>")
         
+        else: # Launch UI gameplay
+            self.ui = UI(self.data_parser, self.scorekeeper, self.data_fp, log = log, suggest = False)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog='python3 main.py',
@@ -137,5 +141,8 @@ if __name__ == "__main__":
     # realtime output, not making confusion matrix
     parser.add_argument('-id', '--id', type=bool, default = False)
     parser.add_argument('-l', '--log', type=bool, default = False)
+    parser.add_argument('--images', action='store_true', default=True, help='Use images (multimodal) for LLM agent (default: True)')
+    parser.add_argument('--no_images', action='store_false', dest='images', help='Disable images (multimodal) for LLM agent')
     args = parser.parse_args()
     Main(args.mode, args.id, args.log)
+ 

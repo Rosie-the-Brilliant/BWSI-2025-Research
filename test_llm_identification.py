@@ -9,7 +9,7 @@ from gameplay.humanoid import Humanoid
 
 def run_llm_identification_evaluation(llm_agent, num_images=20, num_batches=1, save_matrix=None):
     data_parser = llm_agent.data_parser
-    class_names = ['HEALTHY', 'INJURED', 'ZOMBIE', 'CORPSE']
+    class_names = ['HEALTHY', 'INJURED', 'CORPSE', 'ZOMBIE']
     all_true_total = []
     all_pred_total = []
 

@@ -13,6 +13,7 @@ class PerformanceTracker:
         self.save_dir = save_dir
         self.performance_data = []
         self.current_run_data = []
+        self.action_counts = {"SAVE": 0, "SQUISH": 0, "SKIP": 0, "SCRAM": 0}
         
         # Create directory if it doesn't exist
         os.makedirs(save_dir, exist_ok=True)
@@ -32,11 +33,13 @@ class PerformanceTracker:
             print(f"Could not load existing data: {e}")
             self.performance_data = []
     
-    def start_new_run(self, mode="llm"):
+    def start_new_run(self, mode, images=None):
         """Start tracking a new run"""
         self.current_run_data = []
         self.current_run_start = datetime.now()
         self.current_mode = mode
+        self.llm_images = images
+        self.action_counts = {"SAVE": 0, "SQUISH": 0, "SKIP": 0, "SCRAM": 0}
         print(f"🎮 Starting new performance tracking for mode: {mode}")
     
     def log_decision(self, humanoid, action, scorekeeper, llm_calls=None, total_decisions=None):
@@ -54,6 +57,9 @@ class PerformanceTracker:
             "total_decisions": total_decisions
         }
         self.current_run_data.append(decision_data)
+        action_name = getattr(action, 'name', str(action)).upper()
+        if action_name in self.action_counts:
+            self.action_counts[action_name] += 1
     
     def end_run(self, final_scorekeeper, stats=None):
         """End the current run and save data"""
@@ -75,12 +81,14 @@ class PerformanceTracker:
             "run_id": len(self.performance_data) + 1,
             "timestamp": self.current_run_start.isoformat(),
             "mode": self.current_mode,
+            "images": self.llm_images,
             "final_reward": final_reward,
             "final_saved": final_saved,
             "final_killed": final_killed,
             "total_decisions": len(self.current_run_data),
             "llm_call_percentage": llm_call_percentage,
-            "decisions": self.current_run_data
+            "decisions": self.current_run_data,
+            "action_frequencies": dict(self.action_counts)
         }
         
         # Add to performance data
@@ -126,6 +134,7 @@ class PerformanceTracker:
                 'run_id': run['run_id'],
                 'timestamp': run['timestamp'],
                 'mode': run['mode'],
+                'images': run['images'], # Add llm_images to summary
                 'final_reward': run['final_reward'],
                 'final_saved': run['final_saved'],
                 'final_killed': run['final_killed'],
@@ -164,5 +173,9 @@ class PerformanceTracker:
         # Print each run
         for run in self.performance_data:
             print(f"Run {run['run_id']} (llm): Reward={run['final_reward']}, Saved={run['final_saved']}, Killed={run['final_killed']}")
+            if hasattr(self, 'action_counts'):
+                print("Action frequencies this run:")
+                for action, count in self.action_counts.items():
+                    print(f"  {action}: {count}")
         
         print("="*50) 

@@ -1,17 +1,18 @@
 [
   {
     "run_id": 1,
-    "timestamp": "2025-07-15T14:14:19.719701",
+    "timestamp": "2025-07-21T14:39:18.521419",
     "mode": "llm",
+    "images": false,
     "final_reward": -3,
-    "final_saved": 1,
-    "final_killed": 4,
-    "total_decisions": 27,
+    "final_saved": 0,
+    "final_killed": 3,
+    "total_decisions": 13,
     "llm_call_percentage": 0,
     "decisions": [
       {
-        "timestamp": "2025-07-15T14:14:31.829029",
-        "humanoid_state": "healthy",
+        "timestamp": "2025-07-21T14:39:26.454580",
+        "humanoid_state": "zombie",
         "action": "ActionCost.SAVE",
         "remaining_time": 720,
         "ambulance_contents": {
@@ -26,13 +27,93 @@
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-15T14:14:42.041967",
-        "humanoid_state": "injured",
+        "timestamp": "2025-07-21T14:39:27.315724",
+        "humanoid_state": "corpse",
         "action": "ActionCost.SCRAM",
         "remaining_time": 690,
         "ambulance_contents": {
+          "zombie": 1,
+          "injured": 0,
+          "healthy": 0
+        },
+        "current_reward": 0,
+        "saved_count": 0,
+        "killed_count": 0,
+        "llm_calls": null,
+        "total_decisions": null
+      },
+      {
+        "timestamp": "2025-07-21T14:39:28.157823",
+        "humanoid_state": "zombie",
+        "action": "ActionCost.SCRAM",
+        "remaining_time": 570,
+        "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
+          "healthy": 0
+        },
+        "current_reward": 0,
+        "saved_count": 0,
+        "killed_count": 0,
+        "llm_calls": null,
+        "total_decisions": null
+      },
+      {
+        "timestamp": "2025-07-21T14:39:28.941070",
+        "humanoid_state": "injured",
+        "action": "ActionCost.SAVE",
+        "remaining_time": 450,
+        "ambulance_contents": {
+          "zombie": 0,
+          "injured": 0,
+          "healthy": 0
+        },
+        "current_reward": 0,
+        "saved_count": 0,
+        "killed_count": 0,
+        "llm_calls": null,
+        "total_decisions": null
+      },
+      {
+        "timestamp": "2025-07-21T14:39:29.719147",
+        "humanoid_state": "healthy",
+        "action": "ActionCost.SKIP",
+        "remaining_time": 420,
+        "ambulance_contents": {
+          "zombie": 0,
+          "injured": 1,
+          "healthy": 0
+        },
+        "current_reward": 0,
+        "saved_count": 0,
+        "killed_count": 0,
+        "llm_calls": null,
+        "total_decisions": null
+      },
+      {
+        "timestamp": "2025-07-21T14:39:30.512223",
+        "humanoid_state": "healthy",
+        "action": "ActionCost.SAVE",
+        "remaining_time": 405,
+        "ambulance_contents": {
+          "zombie": 0,
+          "injured": 1,
+          "healthy": 0
+        },
+        "current_reward": 0,
+        "saved_count": 0,
+        "killed_count": 0,
+        "llm_calls": null,
+        "total_decisions": null
+      },
+      {
+        "timestamp": "2025-07-21T14:39:31.295552",
+        "humanoid_state": "zombie",
+        "action": "ActionCost.SAVE",
+        "remaining_time": 375,
+        "ambulance_contents": {
+          "zombie": 0,
+          "injured": 1,
           "healthy": 1
         },
         "current_reward": 0,
@@ -42,402 +123,98 @@
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-15T14:14:52.489790",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 570,
+        "timestamp": "2025-07-21T14:39:32.023527",
+        "humanoid_state": "healthy",
+        "action": "ActionCost.SAVE",
+        "remaining_time": 345,
         "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
+          "zombie": 1,
+          "injured": 1,
+          "healthy": 1
         },
-        "current_reward": 1,
-        "saved_count": 1,
+        "current_reward": 0,
+        "saved_count": 0,
         "killed_count": 0,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-15T14:15:02.655802",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 555,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 1,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:15:12.513341",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 540,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 1,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:15:22.496117",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SQUISH",
-        "remaining_time": 525,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 1,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:15:31.969656",
+        "timestamp": "2025-07-21T14:39:32.859738",
         "humanoid_state": "healthy",
         "action": "ActionCost.SCRAM",
-        "remaining_time": 520,
+        "remaining_time": 315,
         "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -1,
-        "saved_count": 1,
-        "killed_count": 2,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:15:41.817467",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 400,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -1,
-        "saved_count": 1,
-        "killed_count": 2,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:15:51.476203",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 370,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": -1,
-        "saved_count": 1,
-        "killed_count": 2,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:16:01.084014",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 340,
-        "ambulance_contents": {
-          "zombie": 0,
+          "zombie": 1,
           "injured": 1,
-          "healthy": 1
+          "healthy": 2
         },
-        "current_reward": -1,
-        "saved_count": 1,
-        "killed_count": 2,
+        "current_reward": 0,
+        "saved_count": 0,
+        "killed_count": 0,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-15T14:16:10.489760",
+        "timestamp": "2025-07-21T14:39:33.638201",
         "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 325,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 1
-        },
-        "current_reward": -1,
-        "saved_count": 1,
-        "killed_count": 2,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:16:20.041906",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 310,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 1
-        },
-        "current_reward": -1,
-        "saved_count": 1,
-        "killed_count": 2,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:16:29.940076",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 295,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 1
-        },
-        "current_reward": -1,
-        "saved_count": 1,
-        "killed_count": 2,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:16:39.208354",
-        "humanoid_state": "corpse",
         "action": "ActionCost.SAVE",
-        "remaining_time": 280,
+        "remaining_time": 195,
         "ambulance_contents": {
           "zombie": 0,
-          "injured": 1,
-          "healthy": 1
+          "injured": 0,
+          "healthy": 0
         },
-        "current_reward": -1,
-        "saved_count": 1,
-        "killed_count": 2,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:16:48.994986",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SQUISH",
-        "remaining_time": 250,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 2
-        },
-        "current_reward": -1,
-        "saved_count": 1,
-        "killed_count": 2,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:16:58.902202",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 245,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 2
-        },
-        "current_reward": -2,
-        "saved_count": 1,
+        "current_reward": -3,
+        "saved_count": 0,
         "killed_count": 3,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-15T14:17:08.422727",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 230,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 2
-        },
-        "current_reward": -3,
-        "saved_count": 1,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:17:18.691485",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 200,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 3
-        },
-        "current_reward": -3,
-        "saved_count": 1,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:17:28.854506",
+        "timestamp": "2025-07-21T14:39:34.434337",
         "humanoid_state": "zombie",
-        "action": "ActionCost.SQUISH",
-        "remaining_time": 185,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 3
-        },
-        "current_reward": -3,
-        "saved_count": 1,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:17:38.594263",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 180,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 3
-        },
-        "current_reward": -3,
-        "saved_count": 1,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:17:48.691747",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SAVE",
+        "action": "ActionCost.SCRAM",
         "remaining_time": 165,
         "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 3
+          "zombie": 1,
+          "injured": 0,
+          "healthy": 0
         },
         "current_reward": -3,
-        "saved_count": 1,
-        "killed_count": 4,
+        "saved_count": 0,
+        "killed_count": 3,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-15T14:17:58.238465",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 135,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 4
-        },
-        "current_reward": -3,
-        "saved_count": 1,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:18:08.261084",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 105,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 2,
-          "healthy": 4
-        },
-        "current_reward": -3,
-        "saved_count": 1,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:18:17.534733",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 90,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 2,
-          "healthy": 4
-        },
-        "current_reward": -3,
-        "saved_count": 1,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:18:26.307885",
+        "timestamp": "2025-07-21T14:39:35.216004",
         "humanoid_state": "healthy",
         "action": "ActionCost.SKIP",
-        "remaining_time": 60,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 2,
-          "healthy": 5
-        },
-        "current_reward": -3,
-        "saved_count": 1,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:18:35.874043",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SAVE",
         "remaining_time": 45,
         "ambulance_contents": {
           "zombie": 0,
-          "injured": 2,
-          "healthy": 5
+          "injured": 0,
+          "healthy": 0
         },
         "current_reward": -3,
-        "saved_count": 1,
-        "killed_count": 4,
+        "saved_count": 0,
+        "killed_count": 3,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-15T14:18:45.307982",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 15,
+        "timestamp": "2025-07-21T14:39:36.061267",
+        "humanoid_state": "corpse",
+        "action": "ActionCost.SCRAM",
+        "remaining_time": 30,
         "ambulance_contents": {
-          "zombie": 1,
-          "injured": 2,
-          "healthy": 5
+          "zombie": 0,
+          "injured": 0,
+          "healthy": 0
         },
         "current_reward": -3,
-        "saved_count": 1,
-        "killed_count": 4,
+        "saved_count": 0,
+        "killed_count": 3,
         "llm_calls": null,
         "total_decisions": null
       }
@@ -445,17 +222,18 @@
   },
   {
     "run_id": 2,
-    "timestamp": "2025-07-15T14:20:50.483439",
+    "timestamp": "2025-07-21T16:01:01.504827",
     "mode": "llm",
-    "final_reward": 1,
-    "final_saved": 2,
-    "final_killed": 1,
-    "total_decisions": 24,
+    "images": false,
+    "final_reward": -7,
+    "final_saved": 1,
+    "final_killed": 8,
+    "total_decisions": 21,
     "llm_call_percentage": 0,
     "decisions": [
       {
-        "timestamp": "2025-07-15T14:20:56.452535",
-        "humanoid_state": "zombie",
+        "timestamp": "2025-07-21T16:01:10.536664",
+        "humanoid_state": "healthy",
         "action": "ActionCost.SKIP",
         "remaining_time": 720,
         "ambulance_contents": {
@@ -470,9 +248,9 @@
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-15T14:21:02.272046",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
+        "timestamp": "2025-07-21T16:01:11.309645",
+        "humanoid_state": "zombie",
+        "action": "ActionCost.SCRAM",
         "remaining_time": 705,
         "ambulance_contents": {
           "zombie": 0,
@@ -486,852 +264,152 @@
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-15T14:21:08.067638",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 690,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:21:13.970334",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 675,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:21:20.079418",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SQUISH",
-        "remaining_time": 660,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:21:26.256597",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 655,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:21:33.104044",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SCRAM",
-        "remaining_time": 640,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:21:40.125782",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 520,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:21:47.486590",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 490,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:21:56.722576",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SCRAM",
-        "remaining_time": 460,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 1
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:22:07.490135",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SQUISH",
-        "remaining_time": 340,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 2,
-        "saved_count": 2,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:22:18.347756",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 335,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:22:31.824838",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 305,
-        "ambulance_contents": {
-          "zombie": 1,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:22:44.686257",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 275,
-        "ambulance_contents": {
-          "zombie": 1,
-          "injured": 1,
-          "healthy": 0
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:22:57.647196",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 245,
-        "ambulance_contents": {
-          "zombie": 1,
-          "injured": 1,
-          "healthy": 1
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:23:10.935843",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 215,
-        "ambulance_contents": {
-          "zombie": 1,
-          "injured": 1,
-          "healthy": 2
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:23:22.386617",
+        "timestamp": "2025-07-21T16:01:12.010145",
         "humanoid_state": "corpse",
         "action": "ActionCost.SAVE",
-        "remaining_time": 185,
-        "ambulance_contents": {
-          "zombie": 2,
-          "injured": 1,
-          "healthy": 2
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:23:32.700344",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 155,
-        "ambulance_contents": {
-          "zombie": 2,
-          "injured": 1,
-          "healthy": 3
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:23:42.639061",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 140,
-        "ambulance_contents": {
-          "zombie": 2,
-          "injured": 1,
-          "healthy": 3
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:23:52.608874",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 110,
-        "ambulance_contents": {
-          "zombie": 3,
-          "injured": 1,
-          "healthy": 3
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:24:02.070826",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 80,
-        "ambulance_contents": {
-          "zombie": 3,
-          "injured": 1,
-          "healthy": 4
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:24:11.229802",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SQUISH",
-        "remaining_time": 50,
-        "ambulance_contents": {
-          "zombie": 3,
-          "injured": 1,
-          "healthy": 5
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:24:20.293329",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 45,
-        "ambulance_contents": {
-          "zombie": 3,
-          "injured": 1,
-          "healthy": 5
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-15T14:24:29.237376",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 15,
-        "ambulance_contents": {
-          "zombie": 4,
-          "injured": 1,
-          "healthy": 5
-        },
-        "current_reward": 1,
-        "saved_count": 2,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      }
-    ]
-  },
-  {
-    "run_id": 3,
-    "timestamp": "2025-07-16T11:25:00.218891",
-    "mode": "llm",
-    "final_reward": -10,
-    "final_saved": 0,
-    "final_killed": 10,
-    "total_decisions": 48,
-    "llm_call_percentage": 0,
-    "decisions": [
-      {
-        "timestamp": "2025-07-16T11:25:00.226062",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 720,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.227784",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 705,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.229258",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 690,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.231007",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 675,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.232408",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 660,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.233925",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 645,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.235400",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 630,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -2,
-        "saved_count": 0,
-        "killed_count": 2,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.236798",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 615,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -3,
-        "saved_count": 0,
-        "killed_count": 3,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.238242",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 600,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -4,
-        "saved_count": 0,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.239575",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
         "remaining_time": 585,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
           "healthy": 0
         },
-        "current_reward": -5,
+        "current_reward": 0,
         "saved_count": 0,
-        "killed_count": 5,
+        "killed_count": 0,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.240972",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 570,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -5,
-        "saved_count": 0,
-        "killed_count": 5,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.242349",
+        "timestamp": "2025-07-21T16:01:12.713652",
         "humanoid_state": "healthy",
         "action": "ActionCost.SKIP",
         "remaining_time": 555,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
-          "healthy": 0
+          "healthy": 1
         },
-        "current_reward": -5,
+        "current_reward": 0,
         "saved_count": 0,
-        "killed_count": 5,
+        "killed_count": 0,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.243819",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
+        "timestamp": "2025-07-21T16:01:13.410490",
+        "humanoid_state": "healthy",
+        "action": "ActionCost.SAVE",
         "remaining_time": 540,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
-          "healthy": 0
+          "healthy": 1
         },
-        "current_reward": -5,
+        "current_reward": 0,
         "saved_count": 0,
-        "killed_count": 5,
+        "killed_count": 0,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.245354",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 525,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -5,
-        "saved_count": 0,
-        "killed_count": 5,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.246809",
+        "timestamp": "2025-07-21T16:01:14.107695",
         "humanoid_state": "healthy",
         "action": "ActionCost.SKIP",
         "remaining_time": 510,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
-          "healthy": 0
+          "healthy": 2
         },
-        "current_reward": -6,
+        "current_reward": 0,
         "saved_count": 0,
-        "killed_count": 6,
+        "killed_count": 0,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.248609",
+        "timestamp": "2025-07-21T16:01:14.805405",
         "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
+        "action": "ActionCost.SAVE",
         "remaining_time": 495,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
-          "healthy": 0
+          "healthy": 2
         },
-        "current_reward": -6,
+        "current_reward": 0,
         "saved_count": 0,
-        "killed_count": 6,
+        "killed_count": 0,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.250130",
+        "timestamp": "2025-07-21T16:01:15.505071",
         "humanoid_state": "corpse",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 480,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -6,
-        "saved_count": 0,
-        "killed_count": 6,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.251805",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
+        "action": "ActionCost.SAVE",
         "remaining_time": 465,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
-          "healthy": 0
+          "healthy": 3
         },
-        "current_reward": -6,
+        "current_reward": 0,
         "saved_count": 0,
-        "killed_count": 6,
+        "killed_count": 0,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.253544",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 450,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -6,
-        "saved_count": 0,
-        "killed_count": 6,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.254899",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
+        "timestamp": "2025-07-21T16:01:16.201240",
+        "humanoid_state": "zombie",
+        "action": "ActionCost.SAVE",
         "remaining_time": 435,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
-          "healthy": 0
+          "healthy": 4
         },
-        "current_reward": -6,
+        "current_reward": 0,
         "saved_count": 0,
-        "killed_count": 6,
+        "killed_count": 0,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.256295",
+        "timestamp": "2025-07-21T16:01:16.901868",
         "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 420,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -6,
-        "saved_count": 0,
-        "killed_count": 6,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.257580",
-        "humanoid_state": "healthy",
         "action": "ActionCost.SKIP",
         "remaining_time": 405,
         "ambulance_contents": {
-          "zombie": 0,
+          "zombie": 1,
           "injured": 0,
-          "healthy": 0
+          "healthy": 4
         },
-        "current_reward": -7,
+        "current_reward": 0,
         "saved_count": 0,
-        "killed_count": 7,
+        "killed_count": 0,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.259119",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
+        "timestamp": "2025-07-21T16:01:17.599405",
+        "humanoid_state": "healthy",
+        "action": "ActionCost.SCRAM",
         "remaining_time": 390,
         "ambulance_contents": {
-          "zombie": 0,
+          "zombie": 1,
           "injured": 0,
-          "healthy": 0
+          "healthy": 4
         },
-        "current_reward": -7,
+        "current_reward": -1,
         "saved_count": 0,
-        "killed_count": 7,
+        "killed_count": 1,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.260526",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 375,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -8,
-        "saved_count": 0,
-        "killed_count": 8,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.261801",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 360,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -8,
-        "saved_count": 0,
-        "killed_count": 8,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.263137",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 345,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -8,
-        "saved_count": 0,
-        "killed_count": 8,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.264369",
+        "timestamp": "2025-07-21T16:01:18.295745",
         "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 330,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -8,
-        "saved_count": 0,
-        "killed_count": 8,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.265612",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 315,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -9,
-        "saved_count": 0,
-        "killed_count": 9,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.267164",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 300,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -9,
-        "saved_count": 0,
-        "killed_count": 9,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.268504",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 285,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -9,
-        "saved_count": 0,
-        "killed_count": 9,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.269833",
-        "humanoid_state": "corpse",
         "action": "ActionCost.SKIP",
         "remaining_time": 270,
         "ambulance_contents": {
@@ -1339,15 +417,15 @@
           "injured": 0,
           "healthy": 0
         },
-        "current_reward": -9,
+        "current_reward": -5,
         "saved_count": 0,
-        "killed_count": 9,
+        "killed_count": 5,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.271274",
-        "humanoid_state": "healthy",
+        "timestamp": "2025-07-21T16:01:18.995257",
+        "humanoid_state": "zombie",
         "action": "ActionCost.SKIP",
         "remaining_time": 255,
         "ambulance_contents": {
@@ -1355,15 +433,15 @@
           "injured": 0,
           "healthy": 0
         },
-        "current_reward": -9,
+        "current_reward": -6,
         "saved_count": 0,
-        "killed_count": 9,
+        "killed_count": 6,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.273207",
-        "humanoid_state": "corpse",
+        "timestamp": "2025-07-21T16:01:19.698165",
+        "humanoid_state": "zombie",
         "action": "ActionCost.SKIP",
         "remaining_time": 240,
         "ambulance_contents": {
@@ -1371,207 +449,79 @@
           "injured": 0,
           "healthy": 0
         },
-        "current_reward": -9,
+        "current_reward": -6,
         "saved_count": 0,
-        "killed_count": 9,
+        "killed_count": 6,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.274592",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
+        "timestamp": "2025-07-21T16:01:20.394690",
+        "humanoid_state": "healthy",
+        "action": "ActionCost.SAVE",
         "remaining_time": 225,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
           "healthy": 0
         },
-        "current_reward": -9,
+        "current_reward": -6,
         "saved_count": 0,
-        "killed_count": 9,
+        "killed_count": 6,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.275965",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 210,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -10,
-        "saved_count": 0,
-        "killed_count": 10,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.277395",
-        "humanoid_state": "healthy",
+        "timestamp": "2025-07-21T16:01:21.090709",
+        "humanoid_state": "zombie",
         "action": "ActionCost.SKIP",
         "remaining_time": 195,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
-          "healthy": 0
+          "healthy": 1
         },
-        "current_reward": -10,
+        "current_reward": -6,
         "saved_count": 0,
-        "killed_count": 10,
+        "killed_count": 6,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.278899",
-        "humanoid_state": "healthy",
+        "timestamp": "2025-07-21T16:01:21.787508",
+        "humanoid_state": "corpse",
         "action": "ActionCost.SKIP",
         "remaining_time": 180,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
-          "healthy": 0
+          "healthy": 1
         },
-        "current_reward": -10,
+        "current_reward": -6,
         "saved_count": 0,
-        "killed_count": 10,
+        "killed_count": 6,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.280166",
+        "timestamp": "2025-07-21T16:01:22.528964",
         "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
+        "action": "ActionCost.SCRAM",
         "remaining_time": 165,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
-          "healthy": 0
+          "healthy": 1
         },
-        "current_reward": -10,
+        "current_reward": -6,
         "saved_count": 0,
-        "killed_count": 10,
+        "killed_count": 6,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.281540",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 150,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -10,
-        "saved_count": 0,
-        "killed_count": 10,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.282862",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 135,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -10,
-        "saved_count": 0,
-        "killed_count": 10,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.284276",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 120,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -10,
-        "saved_count": 0,
-        "killed_count": 10,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.285520",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 105,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -10,
-        "saved_count": 0,
-        "killed_count": 10,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.286740",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 90,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -10,
-        "saved_count": 0,
-        "killed_count": 10,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.288263",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 75,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -10,
-        "saved_count": 0,
-        "killed_count": 10,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.289663",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 60,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -10,
-        "saved_count": 0,
-        "killed_count": 10,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T11:25:00.291214",
-        "humanoid_state": "zombie",
+        "timestamp": "2025-07-21T16:01:23.227876",
+        "humanoid_state": "injured",
         "action": "ActionCost.SKIP",
         "remaining_time": 45,
         "ambulance_contents": {
@@ -1579,820 +529,50 @@
           "injured": 0,
           "healthy": 0
         },
-        "current_reward": -10,
-        "saved_count": 0,
-        "killed_count": 10,
+        "current_reward": -5,
+        "saved_count": 1,
+        "killed_count": 6,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.292834",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SKIP",
+        "timestamp": "2025-07-21T16:01:23.967822",
+        "humanoid_state": "healthy",
+        "action": "ActionCost.SQUISH",
         "remaining_time": 30,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
           "healthy": 0
         },
-        "current_reward": -10,
-        "saved_count": 0,
-        "killed_count": 10,
+        "current_reward": -6,
+        "saved_count": 1,
+        "killed_count": 7,
         "llm_calls": null,
         "total_decisions": null
       },
       {
-        "timestamp": "2025-07-16T11:25:00.294669",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 15,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -10,
-        "saved_count": 0,
-        "killed_count": 10,
-        "llm_calls": null,
-        "total_decisions": null
-      }
-    ]
-  },
-  {
-    "run_id": 4,
-    "timestamp": "2025-07-16T13:50:46.383272",
-    "mode": "llm",
-    "final_reward": -4,
-    "final_saved": 4,
-    "final_killed": 8,
-    "total_decisions": 29,
-    "llm_call_percentage": 0,
-    "decisions": [
-      {
-        "timestamp": "2025-07-16T13:50:59.816237",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SQUISH",
-        "remaining_time": 720,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:51:05.544676",
+        "timestamp": "2025-07-21T16:01:24.709447",
         "humanoid_state": "corpse",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 715,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:51:11.172547",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 700,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:51:16.799047",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 670,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:51:22.563380",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 655,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:51:28.316493",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SQUISH",
-        "remaining_time": 640,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:51:33.967928",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 635,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": -2,
-        "saved_count": 0,
-        "killed_count": 2,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:51:39.633371",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 605,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 2
-        },
-        "current_reward": -2,
-        "saved_count": 0,
-        "killed_count": 2,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:51:45.248550",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 590,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 2
-        },
-        "current_reward": -2,
-        "saved_count": 0,
-        "killed_count": 2,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:51:50.874877",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 575,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 2
-        },
-        "current_reward": -3,
-        "saved_count": 0,
-        "killed_count": 3,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:51:56.512356",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 545,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 3
-        },
-        "current_reward": -3,
-        "saved_count": 0,
-        "killed_count": 3,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:52:02.254507",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 530,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 3
-        },
-        "current_reward": -4,
-        "saved_count": 0,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:52:07.960029",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 515,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 3
-        },
-        "current_reward": -4,
-        "saved_count": 0,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:52:13.792895",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 485,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 4
-        },
-        "current_reward": -4,
-        "saved_count": 0,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:52:19.771064",
-        "humanoid_state": "healthy",
         "action": "ActionCost.SCRAM",
-        "remaining_time": 470,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 4
-        },
-        "current_reward": -4,
-        "saved_count": 0,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:52:25.677019",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SCRAM",
-        "remaining_time": 350,
+        "remaining_time": 25,
         "ambulance_contents": {
           "zombie": 0,
           "injured": 0,
           "healthy": 0
         },
-        "current_reward": 0,
-        "saved_count": 4,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:52:31.587349",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 230,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 4,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:52:37.612118",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 200,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": 0,
-        "saved_count": 4,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:52:43.696078",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 170,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 1
-        },
-        "current_reward": 0,
-        "saved_count": 4,
-        "killed_count": 4,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:52:49.937873",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SQUISH",
-        "remaining_time": 155,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 1
-        },
-        "current_reward": -1,
-        "saved_count": 4,
-        "killed_count": 5,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:52:56.101105",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 150,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 1
-        },
-        "current_reward": -1,
-        "saved_count": 4,
-        "killed_count": 5,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:53:02.183462",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 135,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 1
-        },
-        "current_reward": -1,
-        "saved_count": 4,
-        "killed_count": 5,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:53:08.247274",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 105,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 2
-        },
-        "current_reward": -1,
-        "saved_count": 4,
-        "killed_count": 5,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:53:14.405675",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 90,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 2
-        },
-        "current_reward": -2,
-        "saved_count": 4,
-        "killed_count": 6,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:53:20.692693",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 75,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 2
-        },
-        "current_reward": -2,
-        "saved_count": 4,
-        "killed_count": 6,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:53:26.942825",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 60,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 2
-        },
-        "current_reward": -3,
-        "saved_count": 4,
-        "killed_count": 7,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:53:33.095285",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 30,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 3
-        },
-        "current_reward": -3,
-        "saved_count": 4,
-        "killed_count": 7,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:53:39.377521",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SQUISH",
-        "remaining_time": 15,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 3
-        },
-        "current_reward": -3,
-        "saved_count": 4,
-        "killed_count": 7,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T13:53:45.628755",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 10,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 1,
-          "healthy": 3
-        },
-        "current_reward": -4,
-        "saved_count": 4,
+        "current_reward": -7,
+        "saved_count": 1,
         "killed_count": 8,
         "llm_calls": null,
         "total_decisions": null
       }
-    ]
-  },
-  {
-    "run_id": 5,
-    "timestamp": "2025-07-16T14:04:53.170535",
-    "mode": "llm",
-    "final_reward": -7,
-    "final_saved": 0,
-    "final_killed": 7,
-    "total_decisions": 18,
-    "llm_call_percentage": 0,
-    "decisions": [
-      {
-        "timestamp": "2025-07-16T14:05:09.025851",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 720,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:05:17.750304",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 690,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:05:26.742307",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SQUISH",
-        "remaining_time": 675,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": 0,
-        "saved_count": 0,
-        "killed_count": 0,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:05:36.100979",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 670,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:05:42.239224",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 640,
-        "ambulance_contents": {
-          "zombie": 1,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:05:51.231174",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SCRAM",
-        "remaining_time": 610,
-        "ambulance_contents": {
-          "zombie": 1,
-          "injured": 0,
-          "healthy": 2
-        },
-        "current_reward": -1,
-        "saved_count": 0,
-        "killed_count": 1,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:06:00.449697",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SCRAM",
-        "remaining_time": 490,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -3,
-        "saved_count": 0,
-        "killed_count": 3,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:06:08.822097",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 370,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -3,
-        "saved_count": 0,
-        "killed_count": 3,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:06:15.100394",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 355,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -3,
-        "saved_count": 0,
-        "killed_count": 3,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:06:24.618485",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 325,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": -3,
-        "saved_count": 0,
-        "killed_count": 3,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:06:33.643511",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 295,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 2
-        },
-        "current_reward": -3,
-        "saved_count": 0,
-        "killed_count": 3,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:06:42.252064",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 265,
-        "ambulance_contents": {
-          "zombie": 1,
-          "injured": 0,
-          "healthy": 2
-        },
-        "current_reward": -3,
-        "saved_count": 0,
-        "killed_count": 3,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:06:51.677463",
-        "humanoid_state": "corpse",
-        "action": "ActionCost.SCRAM",
-        "remaining_time": 235,
-        "ambulance_contents": {
-          "zombie": 1,
-          "injured": 1,
-          "healthy": 2
-        },
-        "current_reward": -3,
-        "saved_count": 0,
-        "killed_count": 3,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:07:00.971394",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 115,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -6,
-        "saved_count": 0,
-        "killed_count": 6,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:07:10.774982",
-        "humanoid_state": "zombie",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 100,
-        "ambulance_contents": {
-          "zombie": 0,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -6,
-        "saved_count": 0,
-        "killed_count": 6,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:07:17.923573",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 70,
-        "ambulance_contents": {
-          "zombie": 1,
-          "injured": 0,
-          "healthy": 0
-        },
-        "current_reward": -6,
-        "saved_count": 0,
-        "killed_count": 6,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:07:25.218872",
-        "humanoid_state": "healthy",
-        "action": "ActionCost.SAVE",
-        "remaining_time": 40,
-        "ambulance_contents": {
-          "zombie": 1,
-          "injured": 0,
-          "healthy": 1
-        },
-        "current_reward": -6,
-        "saved_count": 0,
-        "killed_count": 6,
-        "llm_calls": null,
-        "total_decisions": null
-      },
-      {
-        "timestamp": "2025-07-16T14:07:35.507355",
-        "humanoid_state": "injured",
-        "action": "ActionCost.SKIP",
-        "remaining_time": 10,
-        "ambulance_contents": {
-          "zombie": 1,
-          "injured": 0,
-          "healthy": 2
-        },
-        "current_reward": -6,
-        "saved_count": 0,
-        "killed_count": 6,
-        "llm_calls": null,
-        "total_decisions": null
-      }
-    ]
+    ],
+    "action_frequencies": {
+      "SAVE": 6,
+      "SQUISH": 1,
+      "SKIP": 10,
+      "SCRAM": 4
+    }
   }
 ]

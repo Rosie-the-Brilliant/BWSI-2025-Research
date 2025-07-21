@@ -10,6 +10,7 @@ import os
 import json
 from datetime import datetime
 import numpy as np
+from collections import Counter
 
 def load_performance_data(save_dir="performance_logs"):
     """Load performance data from saved files"""
@@ -69,27 +70,48 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     killed_counts = [run['final_killed'] for run in performance_data]
     llm_percentages = [run.get('llm_call_percentage', 0) for run in performance_data]
     
-    # 1. Reward over time
-    axes[0].scatter(run_ids, rewards, color='blue', alpha=0.7, s=50)
-    axes[0].plot(run_ids, rewards, color='blue', alpha=0.3, linewidth=1)
+    # 1. Reward over time, colored by images
+    df = pd.DataFrame(performance_data)
+    if 'images' not in df.columns:
+        df['images'] = False
+    for images_flag, group in df.groupby('images'):
+        label = 'images' if images_flag else 'text'
+        axes[0].scatter(group['run_id'], group['final_reward'], label=label)
+        axes[0].plot(group['run_id'], group['final_reward'], alpha=0.3)
     axes[0].set_title('Final Reward by Run')
     axes[0].set_xlabel('Run ID')
     axes[0].set_ylabel('Reward (Saved - Killed)')
     axes[0].grid(True, alpha=0.3)
-    
+    axes[0].legend(title='LLM Used Images')
+    # Fit axes tightly to data with a small margin
+    if len(run_ids) > 0:
+        x_min, x_max = min(run_ids), max(run_ids)
+        y_min, y_max = min(rewards), max(rewards)
+        x_margin = max(1, (x_max - x_min) * 0.1)
+        y_margin = max(1, (y_max - y_min) * 0.1)
+        axes[0].set_xlim(x_min - x_margin, x_max + x_margin)
+        axes[0].set_ylim(y_min - y_margin, y_max + y_margin)
     # Add trend line
     if len(run_ids) > 1:
         z = np.polyfit(run_ids, rewards, 1)
         p = np.poly1d(z)
         axes[0].plot(run_ids, p(run_ids), "r--", alpha=0.8, linewidth=2)
     
-    # 2. Saved vs Killed scatter
-    axes[1].scatter(saved_counts, killed_counts, color='blue', alpha=0.7, s=50)
+    # 2. Saved vs Killed scatter with jitter and count annotation
+    pair_counts = Counter((run['final_saved'], run['final_killed']) for run in performance_data)
+    jitter = 0.15
+    for (saved, killed), count in pair_counts.items():
+        # Add small random jitter for each point
+        x = saved + np.random.uniform(-jitter, jitter, size=count)
+        y = killed + np.random.uniform(-jitter, jitter, size=count)
+        axes[1].scatter(x, y, color='blue', alpha=0.7, s=50)
+        if count > 1:
+            # Annotate the center point with the count
+            axes[1].annotate(str(count), (saved, killed), textcoords="offset points", xytext=(5,5), ha='center', fontsize=10, color='red')
     axes[1].set_title('Saved vs Killed')
     axes[1].set_xlabel('Number Saved')
     axes[1].set_ylabel('Number Killed')
     axes[1].grid(True, alpha=0.3)
-    
     # Add diagonal line (reward = 0)
     max_val = max(max(saved_counts), max(killed_counts))
     axes[1].plot([0, max_val], [0, max_val], 'k--', alpha=0.5, label='Reward = 0')
@@ -153,7 +175,13 @@ def print_colorful_summary(performance_data):
     
     # Print each run
     for run in performance_data:
-        print(f"Run {run['run_id']} (llm): Reward={run['final_reward']}, Saved={run['final_saved']}, Killed={run['final_killed']}")
+        mode = run.get('mode', 'unknown')
+        images = run.get('images', False)
+        reward = run.get('final_reward', 0)
+        saved = run.get('final_saved', 0)
+        killed = run.get('final_killed', 0)
+        images_str = 'images' if images else 'text'
+        print(f"Run {run['run_id']} ({mode}, LLM Used: {images_str}): Reward={reward}, Saved={saved}, Killed={killed}")
     
     # Overall stats
     total_runs = len(performance_data)

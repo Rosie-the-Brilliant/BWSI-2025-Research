@@ -1,5 +1,6 @@
 import os
 import base64
+from pyexpat.errors import messages
 import string
 import requests
 import json
@@ -8,7 +9,7 @@ import io
 from gameplay.enums import ActionCost, ActionState, State
 from gameplay.humanoid import Humanoid
 from gameplay.scorekeeper import ScoreKeeper
-from LLM.promptEnums import Prompt
+from LLM.promptEnums import *
 
 
 class LLMInterface:
@@ -43,7 +44,7 @@ class LLMInterface:
     def _test_connection(self):
         """Test if Ollama is running and accessible"""
         try:
-            response = requests.get(f"{self.ollama_url}/api/tags")
+            response = requests.get(f"{self.ollama_url}/api/tags") 
             if response.status_code != 200:
                 print(f"Warning: Ollama API not accessible at {self.ollama_url}")
                 print("Please install and run Ollama: https://ollama.ai/")
@@ -62,67 +63,91 @@ class LLMInterface:
             return None
     
     def _create_image_prompt(self, humanoid, identify=False):
+        # example images for llm context
+        healthy_path = os.path.join(self.img_data_root, 'consolidated_dataset/test_00000.png')
+        #168
+        injured_path = os.path.join(self.img_data_root, 'consolidated_dataset/test_00147.png')
+        corpse_path = os.path.join(self.img_data_root, 'consolidated_dataset/test_00173.png')
+        zombie_path = os.path.join(self.img_data_root, 'consolidated_dataset/test_00177.png')
+
+        example_images = [self._encode_image_to_base64(image) for image in (healthy_path, injured_path, corpse_path, zombie_path)]
+        #print(example_images[0][:10] if (example_images[0] != None) else "")
+
         """Create a multimodal prompt with image and text"""
         image_path = os.path.join(self.img_data_root, humanoid.fp)
-        
+        #print(image_path)
+
         if not os.path.exists(image_path):
             print(f"Warning: Image not found at {image_path}, falling back to text prompt")
+            self.use_images = False
             return Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
         
         # Encode image to base64
         image_base64 = self._encode_image_to_base64(image_path)
-        base_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'consolidated_dataset')
-        healthy_path = os.path.join(self.img_data_root, 'consolidated_dataset/test_00000.png')
-        injured_path = os.path.join(self.img_data_root, 'consolidated_dataset/test_00169.png')
-        corpse_path = os.path.join(self.img_data_root, 'consolidated_dataset/test_00173.png')
-        zombie_path = os.path.join(self.img_data_root, 'consolidated_dataset/test_00177.png')
         
-        if not os.path.exists(healthy_path):
-            print(f"Warning: Image not found at {healthy_path}, falling back to text prompt")
+        if not (image_base64):
+            print(f"Warning: Image not found at {image_base64}, falling back to text prompt")
 
-        if not image_base64:
-            return Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
-        
+        # Note: might be good to error catch here
         return {
-            "prompt": Prompt.IDENTIFY.value if (identify) else Prompt.IMAGETEXT.value.format(time=self.scorekeeper.remaining_time, capacity=(self.scorekeeper.capacity-self.scorekeeper.get_current_capacity())),
-            "images": [self._encode_image_to_base64(image) for image in (healthy_path, injured_path, corpse_path, zombie_path, image_path)]
+            "prompt": Prompt.IDENTIFY.value if identify else Prompt.IMAGETEXT.value.format(time=self.scorekeeper.remaining_time, capacity=(self.scorekeeper.capacity-self.scorekeeper.get_current_capacity())),
+            "image": image_base64,
+            "context": Context.IDENTIFY.value if identify else Context.IMAGETEXT.value,
+            "example_images" : example_images
         }
     
     def _call_ollama_api(self, prompt_data):
         """Call Ollama API and get response"""
         try:
             if self.use_images and isinstance(prompt_data, dict):
+                print("I'm using images")
                 # Multimodal request with image
+                #length = len(prompt_data["image"])
+                #print(prompt_data["image"][length//2:length//2+10])
+
                 payload = {
-                    "model": self.model_name,
-                    "prompt": prompt_data["prompt"],
-                    "images": prompt_data["images"],
+                    "model": self.model_name, 
+                    "messages": [
+                        {"role": "system", "content": prompt_data["context"]},
+                        {"role": "user", "content": "This image is classified as HEALTHY.", "images": [prompt_data["example_images"][0]]},
+                        {"role": "user", "content": "This image is classified as INJURED.", "images": [prompt_data["example_images"][1]]},
+                        {"role": "user", "content": "This image is classified as CORPSE.", "images": [prompt_data["example_images"][2]]},
+                        {"role": "user", "content": "This image is classified as ZOMBIE.", "images": [prompt_data["example_images"][3]]},
+                        
+                        #{"role": "system", "content": prompt_data["context"] + "These are examples of HEALTHY then INJURED then CORPSE then ZOMBIE", "images": prompt_data["example_images"]},
+                        
+                        {"role": "user", "content": prompt_data["prompt"], "images": [prompt_data["image"]]}
+                    ],
                     "stream": False,
                     "options": {
-                        "num_predict": 20,
+                        "num_predict": 30,
                     }
                 }
+
+               
             else:
-                # Text-only request
+                # Text-only request, yes prompt_data is a string, yes that could be a bad idea
                 payload = {
                     "model": self.model_name,
-                    "prompt": prompt_data,
-                    "stream": False
+                    "messages": [
+                        {"role": "system", "content": prompt_data["context"]},
+                        {"role": "user", "content": prompt_data["prompt"]}
+                    ],
+                    "stream": False,
+                    "options":  {
+                        "num_predict": 50,
+                    }
                 }
             
-            # print(f"🔄 Calling Ollama API with model: {self.model_name}")
-            # print(f"📝 Prompt length: {len(str(prompt_data))} characters")
-            
             response = requests.post(
-                f"{self.ollama_url}/api/generate",
+                f"{self.ollama_url}/api/chat",
                 json=payload,
-                timeout=30
+                timeout=100
             )
-            
+
             if response.status_code == 200:
                 result = response.json()
-                response_text = result.get("response", "").strip()
-                #print(f"✅ Ollama response: {response_text}")
+                response_text = result.get("message", {}).get("content", "").strip()
                 return response_text
             else:
                 print(f"❌ Error calling Ollama API: {response.status_code}")
@@ -145,6 +170,7 @@ class LLMInterface:
     def _parse_action_response(self, response):
         """Parse LLM response into game action"""
         if not response:
+            print("no response")
             return ActionCost.SKIP  # Default fallback
         
         # Clean and normalize response
@@ -195,7 +221,10 @@ class LLMInterface:
             prompt_data = self._create_image_prompt(humanoid, identify)
 
         else:
-            prompt_data = Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
+            prompt_data = {
+                    "context": Context.TEXT.value,
+                    "prompt": Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
+                    }
         
         # Get LLM response
         response = self._call_ollama_api(prompt_data)
@@ -205,7 +234,7 @@ class LLMInterface:
         response = response.upper()
 
         if(identify):
-            # print(f"Humanoid: {humanoid.state} \n🤖 Guess: {response}")
+            print(f"Humanoid: {humanoid.state} \n🤖 Guess: {response})")
             return response
         
         # Parse response into action
@@ -217,7 +246,8 @@ class LLMInterface:
         #     humanoid.state == "zombie" and response != "SQUISH" or
         #     humanoid.state == "corpse" and response != "SKIP" or
         #     humanoid.state == "injured"):
-        #     self.ask_for_reasoning(humanoid, action, prompt_data)
+        if(humanoid.state == "zombie" and response != "SQUISH"):
+            self.ask_for_reasoning(humanoid, action, prompt_data)
 
         # Validate action is possible
         if action == ActionCost.SAVE and at_capacity:
@@ -254,41 +284,22 @@ class LLMInterface:
         """
         Ask the LLM to explain its decision
         """
-        # Handle end-of-game reasoning when humanoid is None
-        humanoid_state = humanoid.state if humanoid else "GAME_END"
-
         try:
-            payload = {
-                "model": self.model_name,
-                "prompt": Prompt.REASONING.value,
-                "stream": False,
-                "image": prompt_data["image"],
-                "options": {
-                    "temperature": 0.3,
-                    "num_predict": 55,
-                }
+            messages = {
+                "context": Context.REASONING.value,
+                "prompt": Prompt.REASONING.value.format(action=action,humanoid=humanoid.state),
+
             }
-            #print(f"🔄 Calling Ollama for reasoning with model: {self.model_name}")
-            response = requests.post(
-                f"{self.ollama_url}/api/generate",
-                json=payload,
-                timeout=20
-            )
-            if response.status_code == 200:
-                result = response.json()
-                reasoning = result.get("response", "").strip()
-                print(f"✅ Got reasoning response: {reasoning}...")
-                return reasoning
+            # Attach the image if available
+            if "images" in prompt_data and prompt_data["images"]:
+                messages["images"] = prompt_data["images"]
+            response_text = self._call_ollama_api(messages)
+            if response_text:
+                print(f"✅ Got reasoning response: {response_text}...")
+                return response_text
             else:
-                print(f"❌ Ollama API error: {response.status_code}")
-                print(f"Response: {response.text}")
-                return f"API Error {response.status_code}: {response.text}"
-        except requests.exceptions.ConnectionError as e:
-            print(f"❌ Connection error: {e}")
-            return "Connection error - Ollama not running"
-        except requests.exceptions.Timeout as e:
-            print(f"❌ Timeout error: {e}")
-            return "Timeout - Ollama took too long to respond"
+                print(f"❌ Ollama API call failed or returned no response.")
+                return "API call failed or returned no response."
         except Exception as e:
             print(f"❌ Unexpected error: {e}")
             return f"Error: {str(e)}" 

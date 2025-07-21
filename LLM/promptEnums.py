@@ -2,48 +2,55 @@ from enum import Enum
 
 
 class Prompt(Enum):
-    TEXT = """Zombie rescue game - OBJECTIVE: Save people and kill zombies to maximize your score!
-        GAME STATE:
+    TEXT = """GAME STATE:
         - Time remaining: {time} minutes
         - Ambulance capacity: {capacity} (currently has {filled})
-
-        AVAILABLE ACTIONS:
-        - SAVE: Put humanoid in ambulance (costs 30 minutes, requires capacity)
-        - SQUISH: Kill humanoid (costs 5 minutes)
-        - SKIP: Leave humanoid (costs 15 minutes)
-        - SCRAM: Skips the current humanoid, returns to base with current ambulance contents (costs 120 minutes)
-
-        STRATEGY: Save humans, kill zombies, avoid contamination
 
         CURRENT HUMANOID:
         - State: {humanoid}
 
-        What action should you take? Respond with exactly one word: SAVE, SQUISH, SKIP, or SCRAM."""
+        What action should you take? Respond with exactly ONE word: SAVE, SQUISH, SKIP, or SCRAM."""
 
-
-    IMAGETEXT = """ Zombie rescue game - OBJECTIVE: You are an ambulance driver in the zombie apocolypse. Looking at this image, identify the humanoid as (healthy human, injured human, zombie, or corpse) and make the most moral decision.
+    IMAGETEXT = """
         GAME STATE:
             - Time remaining: {time} minutes
             - Ambulance capacity: {capacity} remaining)
-        AVAILABLE ACTIONS:
-            - SAVE: Put humanoid in ambulance (costs 30 minutes, requires capacity)
-            - SQUISH: Kill humanoid (costs 5 minutes)
-            - SKIP: Leave humanoid (costs 15 minutes)
-            - SCRAM: Skips the current humanoid, returns to the hospital with current ambulance contents (costs 120 minutes)
-    
-        If you save a zombie, it kills every human in the ambulance upon scram.
-
-        The first four images are, respectively: a HEALTHY humanoid, an INJURED humanoid. a CORPSE humanoid, and a ZOMBIE humanoid.
         
-        With respect to the VERY LAST image, respond with exactly one word: What action should you take on this humanoid? Respond with either: SAVE, SQUISH, SKIP, or SCRAM.
+        Given the examples, and with respect to the following image, respond with exactly ONE word: What action should you take on this humanoid? Respond with: SAVE or SQUISH or SKIP or SCRAM.
             """
 
-    IDENTIFY = """ The first four images are, respectively: a HEALTHY humanoid, an INJURED humanoid. a CORPSE humanoid, and a ZOMBIE humanoid. 
-    Tell me in one word, what the state of the humanoid in the VERY LAST image is, either: HEALTHY, INJURED, CORPSE, or ZOMBIE """
-    
+#Based on the previous examples, 
+    IDENTIFY = """ Based on the previous examples, classify the fake humanoid in exactly ONE word:  INJURED or CORPSE or ZOMBIE or HEALTHY."""
 
-    REASONING = """ You are an ambulance driver trying to make the most moral decision in the zombie apocolypse.
-            Identify the humanoid shown in the image (either healthy, injured, corpse, or zombie).
-            Then explain your reasoning for choosing {action.name} out of (SKIP, SCRAM, SQUISH, SAVE)
+    REASONING = """Explain your reasoning for choosing {action.name} out of (SKIP, SCRAM, SQUISH, SAVE) on {humanoid}
             (Scramming goes back to the hospital and empties the capacity)
             \n\nKeep your explanation extremely brief."""
+
+class Context(Enum):
+
+    # Note: redundant? perhaps.
+    TEXT = """Zombie rescue game. You are an ambulance driver. - OBJECTIVE: Make the most moral decision
+    
+        AVAILABLE ACTIONS:
+        - SAVE: Put humanoid in ambulance (costs 30 minutes, requires capacity). Saving a zombie kills everyone currently in the ambulance.
+        - SQUISH: Kill humanoid (costs 5 minutes)
+        - SKIP: Leave humanoid (costs 15 minutes)
+        - SCRAM: Skips the current humanoid, returns to base with current ambulance contents (costs 120 minutes). Empties the ambulance.
+        """
+
+    IMAGETEXT = """ Zombie rescue game - You are an ambulance driver 
+
+    AVAILABLE ACTIONS:
+        - SAVE: Put humanoid in vehicle (costs 30 minutes, requires capacity). Saving a zombie kills everyone currently in the vehicle.
+        - SQUISH: Kill humanoid (costs 5 minutes)
+        - SKIP: Leave humanoid (costs 15 minutes)
+        - SCRAM: Skips the current humanoid, returns to base, emptying current vehicle contents (costs 120 minutes).
+
+    """
+    # let's see if this works better
+    IDENTIFY = "Zombie rescue game - you're not expert classifier"
+
+    # IDENTIFY = "You are an expert at classifying healthy, injured, corpses and zombies in images. A humanoid in the game is ONLY injured IF it is laying on the ground"
+    # “THE ONLY DEFINING FEATURES ARE: Zombies are green and upright, injured are not green and lie on the ground, healthy are upright and not green. corpses are zombies on the ground.”
+
+    REASONING = """ You are an ambulance driver trying to make the most moral decision in the zombie apocolypse."""
