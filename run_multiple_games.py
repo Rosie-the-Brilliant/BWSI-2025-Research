@@ -4,12 +4,13 @@ Run multiple games with a single command
 Usage: python3 run_multiple_games.py [mode] [number_of_runs]
 """
 
+import argparse
 import sys
 import subprocess
 import time
 from datetime import datetime
 
-def run_multiple_games(mode='llm', num_runs=5):
+def run_multiple_games(mode='llm', role='default', num_runs=5):
     """Run multiple games and collect performance data"""
     print(f"🎮 Running {num_runs} games in {mode} mode")
     print("="*50)
@@ -23,7 +24,7 @@ def run_multiple_games(mode='llm', num_runs=5):
         try:
             # Run the game
             result = subprocess.run([
-                'python3', 'main.py', '-m', mode
+                'python3', 'main.py', '-m', mode, '-r', role, 
             ], capture_output=True, text=True, timeout=300)  # 5 minute timeout
             
             if result.returncode == 0:
@@ -79,4 +80,16 @@ def main():
     run_multiple_games(mode, num_runs)
 
 if __name__ == "__main__":
-    main() 
+    parser = argparse.ArgumentParser(
+        prog='python3 main.py',
+        description='What the program does',
+        epilog='Text at the bottom of help')
+    parser.add_argument('-m', '--mode', type=str, default = 'user', choices = ['user','heuristic','train','infer','llm'], help='llm=multimodal LLM agent (default)')
+    # realtime output, not making confusion matrix
+    parser.add_argument('-r', '--role', type=str, default='default', help='Optional role/label for this run (for graphing, e.g., "doctor")')
+    parser.add_argument('-n', '--num_runs', type=int, default=5, help='Optional number of runs')
+    parser.add_argument('--images', action='store_true', default=True, help='Use images (multimodal) for LLM agent (default: True)')
+    parser.add_argument('--no_images', action='store_false', dest='images', help='Disable images (multimodal) for LLM agent')
+    args = parser.parse_args()
+    run_multiple_games(args.mode, args.role, args.num_runs)
+ 

@@ -18,7 +18,7 @@ class LLMInterface:
     Uses Ollama API for free multimodal capabilities.
     """
     
-    def __init__(self, data_parser, scorekeeper, img_data_root='data', use_images=True, tag=None,
+    def __init__(self, data_parser, scorekeeper, img_data_root='data', use_images=True, role=None,
                  ollama_url="http://localhost:11434", model_name="llava"):
         """
         Initialize LLM interface
@@ -35,7 +35,7 @@ class LLMInterface:
         self.scorekeeper = scorekeeper
         self.img_data_root = img_data_root
         self.use_images = use_images
-        self.tag = tag
+        self.role = role
         self.ollama_url = ollama_url
         self.model_name = model_name
         
@@ -222,7 +222,7 @@ class LLMInterface:
 
         else:
             context = "Zombie rescue game. You are an ambulance driver. - OBJECTIVE: Make the most moral decision"
-            if(self.tag == 'doctor'):
+            if(self.role == 'doctor'):
                 context = Context.DOCTOR.value
             
             prompt_data = {

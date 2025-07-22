@@ -26,7 +26,7 @@ class Main(object):
     """
     Base class for the SGAI 2023 game
     """
-    def __init__(self, mode, identify, log):
+    def __init__(self, mode, log, role):
         self.data_fp = os.path.join(os.path.dirname(__file__), 'data')
         self.data_parser = DataParser(self.data_fp)
         shift_length = 720
@@ -77,8 +77,8 @@ class Main(object):
             
             # Initialize performance tracker (will load existing data)
             tracker = PerformanceTracker()
-            llm_agent = LLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=args.images, tag=args.tag)
-            tracker.start_new_run(mode, images=args.images, tag=args.tag)
+            llm_agent = LLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=args.images, role=role)
+            tracker.start_new_run(mode, images=args.images, role=role)
             
             while len(self.data_parser.unvisited) > 0:
                 if self.scorekeeper.remaining_time <= 0:
@@ -87,21 +87,20 @@ class Main(object):
                     break
                 else:
                     humanoid = self.data_parser.get_random()
-                    action = llm_agent.get_model_suggestion(humanoid, self.scorekeeper.at_capacity(), identify)
-                    if(not identify):
-                        # Log the decision
-                        tracker.log_decision(humanoid, action, self.scorekeeper)
-                        
-                        if action == ActionCost.SKIP:
-                            self.scorekeeper.skip(humanoid)
-                        elif action == ActionCost.SQUISH:
-                            self.scorekeeper.squish(humanoid)
-                        elif action == ActionCost.SAVE:
-                            self.scorekeeper.save(humanoid)
-                        elif action == ActionCost.SCRAM:
-                            self.scorekeeper.scram(humanoid)
-                        else:
-                            raise ValueError("Invalid action suggested")
+                    action = llm_agent.get_model_suggestion(humanoid, self.scorekeeper.at_capacity(), identify=False)
+                    # Log the decision
+                    tracker.log_decision(humanoid, action, self.scorekeeper)
+                    
+                    if action == ActionCost.SKIP:
+                        self.scorekeeper.skip(humanoid)
+                    elif action == ActionCost.SQUISH:
+                        self.scorekeeper.squish(humanoid)
+                    elif action == ActionCost.SAVE:
+                        self.scorekeeper.save(humanoid)
+                    elif action == ActionCost.SCRAM:
+                        self.scorekeeper.scram(humanoid)
+                    else:
+                        raise ValueError("Invalid action suggested")
             
             if log:
                 self.scorekeeper.save_log()
@@ -140,11 +139,10 @@ if __name__ == "__main__":
         epilog='Text at the bottom of help')
     parser.add_argument('-m', '--mode', type=str, default = 'user', choices = ['user','heuristic','train','infer','llm'], help='llm=multimodal LLM agent (default)')
     # realtime output, not making confusion matrix
-    parser.add_argument('-id', '--id', type=bool, default = False)
     parser.add_argument('-l', '--log', type=bool, default = False)
-    parser.add_argument('-t', '--tag', type=str, default='', help='Optional tag/label for this run (for graphing, e.g., "doctor")')
+    parser.add_argument('-r', '--role', type=str, default='default', help='Optional role/label for this run (for graphing, e.g., "doctor")')
     parser.add_argument('--images', action='store_true', default=True, help='Use images (multimodal) for LLM agent (default: True)')
     parser.add_argument('--no_images', action='store_false', dest='images', help='Disable images (multimodal) for LLM agent')
     args = parser.parse_args()
-    Main(args.mode, args.id, args.log)
+    Main(args.mode, args.log, args.role)
  

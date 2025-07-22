@@ -33,15 +33,15 @@ class PerformanceTracker:
             print(f"Could not load existing data: {e}")
             self.performance_data = []
     
-    def start_new_run(self, mode, images=None, tag=''):
+    def start_new_run(self, mode, images=None, role=''):
         """Start tracking a new run"""
         self.current_run_data = []
         self.current_run_start = datetime.now()
         self.current_mode = mode
         self.llm_images = images
         self.action_counts = {"SAVE": 0, "SQUISH": 0, "SKIP": 0, "SCRAM": 0}
-        self.current_tag = tag
-        print(f"🎮 Starting new performance tracking for mode: {mode} (tag: {tag})")
+        self.current_role = role
+        print(f"🎮 Starting new performance tracking for mode: {mode} (role: {role})")
     
     def log_decision(self, humanoid, action, scorekeeper, llm_calls=None, total_decisions=None):
         """Log a single decision"""
@@ -54,7 +54,6 @@ class PerformanceTracker:
             "current_reward": scorekeeper.get_cumulative_reward(),
             "saved_count": scorekeeper.scorekeeper["saved"],
             "killed_count": scorekeeper.scorekeeper["killed"],
-            "llm_calls": llm_calls,
             "total_decisions": total_decisions
         }
         self.current_run_data.append(decision_data)
@@ -72,10 +71,6 @@ class PerformanceTracker:
         final_saved = final_scorekeeper.scorekeeper["saved"]
         final_killed = final_scorekeeper.scorekeeper["killed"]
         
-        # Get LLM performance stats if available
-        llm_call_percentage = 0
-        if stats:
-            llm_call_percentage = stats.get('llm_call_percentage', 0)
         
         # Create run summary
         run_summary = {
@@ -87,10 +82,9 @@ class PerformanceTracker:
             "final_saved": final_saved,
             "final_killed": final_killed,
             "total_decisions": len(self.current_run_data),
-            "llm_call_percentage": llm_call_percentage,
             "decisions": self.current_run_data,
             "action_frequencies": dict(self.action_counts),
-            "tag": getattr(self, 'current_tag', '')
+            "role": getattr(self, 'current_role', '')
         }
         
         # Add to performance data
@@ -141,7 +135,7 @@ class PerformanceTracker:
                 'final_saved': run['final_saved'],
                 'final_killed': run['final_killed'],
                 'total_decisions': run['total_decisions'],
-                'llm_call_percentage': run.get('llm_call_percentage', 0)
+                'role': run['role']
             })
         
         df = pd.DataFrame(summary_data)
@@ -159,7 +153,6 @@ class PerformanceTracker:
             'reward': latest_run['final_reward'],
             'saved': latest_run['final_saved'],
             'killed': latest_run['final_killed'],
-            'llm_calls': latest_run.get('llm_call_percentage', 0)
         }
     
     def print_summary(self):

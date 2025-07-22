@@ -12,6 +12,24 @@ from datetime import datetime
 import numpy as np
 from collections import Counter
 
+def get_role_color_map():
+    """Define colors for different roles"""
+    return {
+        'doctor': '#e74c3c',      # Red
+        'engineer': '#f39c12',    # Orange
+        'student': '#f1c40f',     # Yellow
+        'dictator': '#2ecc71',    # Green
+        'scientist': '#9b59b6',   # Purple
+        'default': '#3498db'      # Default Blue
+    }
+
+def get_text_image_markers():
+    """Define markers for text vs image usage"""
+    return {
+        True: 'o',   # Circle for images
+        False: 's'   # Square for text
+    }
+
 def load_performance_data(save_dir="performance_logs"):
     """Load performance data from saved files"""
     data_file = os.path.join(save_dir, "performance_history.json")
@@ -62,6 +80,10 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     plt.style.use('default')
     fig, axes = plt.subplots(1, 3, figsize=(24, 6))
     fig.suptitle('LLM Agent Performance Analysis', fontsize=16, fontweight='bold')
+
+     # Get color and marker mappings
+    role_colors = get_role_color_map()
+    text_image_markers = get_text_image_markers()
     
     # Extract data for plotting
     run_ids = [run['run_id'] for run in performance_data]
@@ -69,19 +91,45 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     saved_counts = [run['final_saved'] for run in performance_data]
     killed_counts = [run['final_killed'] for run in performance_data]
     
-    # 1. Reward over time, colored by images
+    # 1. Reward over time, colored by role and shaped by text/images
     df = pd.DataFrame(performance_data)
     if 'images' not in df.columns:
         df['images'] = False
-    for images_flag, group in df.groupby('images'):
-        label = 'images' if images_flag else 'text'
-        axes[0].scatter(group['run_id'], group['final_reward'], label=label)
-        axes[0].plot(group['run_id'], group['final_reward'], alpha=0.3)
+    if 'role' not in df.columns:
+        df['role'] = 'default'
+
+    for _, row in df.iterrows():
+        color = role_colors.get(row['role'], role_colors['default'])
+        marker = text_image_markers[row['images']]
+        axes[0].scatter(row['run_id'], row['final_reward'], 
+                       color=color, marker=marker, s=80, alpha=0.7,
+                       edgecolors='black', linewidth=0.5)
+        
+    # Simple combined legend
+    legend_handles = [] 
+    
+    # Add role colors
+    for role in df['role'].unique():
+        color = role_colors.get(role, role_colors['default'])
+        legend_handles.append(plt.Line2D([0], [0], marker='o', color='w', 
+                                        markerfacecolor=color, markersize=8, 
+                                        label=role.capitalize()))
+    
+    # Add separator and shapes
+    legend_handles.append(plt.Line2D([0], [0], color='none', label=''))  # Empty line
+    legend_handles.append(plt.Line2D([0], [0], marker='s', color='gray', 
+                                    markersize=8, linestyle='None', label='Text'))
+    legend_handles.append(plt.Line2D([0], [0], marker='o', color='gray', 
+                                    markersize=8, linestyle='None', label='Images'))
+    
+    axes[0].legend(handles=legend_handles, loc='upper right')
+
+
     axes[0].set_title('Final Reward by Run')
     axes[0].set_xlabel('Run ID')
     axes[0].set_ylabel('Reward (Saved - Killed)')
     axes[0].grid(True, alpha=0.3)
-    axes[0].legend(title='LLM Used Images')
+
     # Fit axes tightly to data with a small margin
     if len(run_ids) > 0:
         x_min, x_max = min(run_ids), max(run_ids)
@@ -96,7 +144,8 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
         p = np.poly1d(z)
         axes[0].plot(run_ids, p(run_ids), "r--", alpha=0.8, linewidth=2)
     
-    # 2. Saved vs Killed scatter with jitter and count annotation
+    
+    # 2. Saved vs Killed scatter
     pair_counts = Counter((run['final_saved'], run['final_killed']) for run in performance_data)
     jitter = 0.15
     for (saved, killed), count in pair_counts.items():
@@ -104,9 +153,6 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
         y = saved + np.random.uniform(-jitter, jitter, size=count)
         x = killed + np.random.uniform(-jitter, jitter, size=count)
         axes[1].scatter(x, y, color='blue', alpha=0.7, s=50)
-        if count > 1:
-            # Annotate the center point with the count
-            axes[1].annotate(str(count), (saved, killed), textcoords="offset points", xytext=(5,5), ha='center', fontsize=10, color='red')
     axes[1].set_title('Saved vs Killed')
     axes[1].set_ylabel('Number Saved')
     axes[1].set_xlabel('Number Killed')

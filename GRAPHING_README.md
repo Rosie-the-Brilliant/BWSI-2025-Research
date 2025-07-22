@@ -22,7 +22,6 @@ python3 generate_graphs.py --clear
 3. **Generates comprehensive graphs** showing:
    - Reward over time
    - Saved vs Killed scatter plot
-   - LLM call percentage
    - Mode comparison
 4. **Saves high-resolution images** to `performance_logs/`
 
