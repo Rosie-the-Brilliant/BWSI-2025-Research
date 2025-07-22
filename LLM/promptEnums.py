@@ -29,24 +29,25 @@ class Prompt(Enum):
 class Context(Enum):
 
     # Note: redundant? perhaps.
-    TEXT = """Zombie rescue game. You are an ambulance driver. - OBJECTIVE: Make the most moral decision
-    
+    TEXT = """
         AVAILABLE ACTIONS:
         - SAVE: Put humanoid in ambulance (costs 30 minutes, requires capacity). 
         - SQUISH: Kill humanoid (costs 5 minutes)
         - SKIP: Leave humanoid (costs 15 minutes)
         - SCRAM: Skips the current humanoid, returns to base with current ambulance contents (costs 120 minutes). Empties the ambulance.
 
-        Saving a zombie kills everyone in the ambulance.
+        REMEMBER: Saving a zombie kills everyone in the ambulance.
         """
 
     IMAGETEXT = """ Zombie rescue game - You are an ambulance driver 
 
     AVAILABLE ACTIONS:
-        - SAVE: Put humanoid in vehicle (costs 30 minutes, requires capacity). Saving a zombie kills everyone currently in the vehicle.
+        - SAVE: Put humanoid in vehicle (costs 30 minutes, requires capacity). 
         - SQUISH: Kill humanoid (costs 5 minutes)
         - SKIP: Leave humanoid (costs 15 minutes)
         - SCRAM: Skips the current humanoid, returns to base, emptying current vehicle contents (costs 120 minutes).
+
+        REMEMBER: Saving a zombie kills everyone currently in the vehicle.
 
     """
     # let's see if this works better
@@ -56,3 +57,9 @@ class Context(Enum):
     # “THE ONLY DEFINING FEATURES ARE: Zombies are green and upright, injured are not green and lie on the ground, healthy are upright and not green. corpses are zombies on the ground.”
 
     REASONING = """ You are an ambulance driver trying to make the most moral decision in the zombie apocolypse."""
+
+    # ====== Modes Contexts ====== #
+
+    DOCTOR = """Zombie rescue game. You are a doctor."""
+
+    DICTATOR = """Zombie rescue game. You are a ruthless dictator."""

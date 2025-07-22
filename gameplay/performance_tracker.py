@@ -33,14 +33,15 @@ class PerformanceTracker:
             print(f"Could not load existing data: {e}")
             self.performance_data = []
     
-    def start_new_run(self, mode, images=None):
+    def start_new_run(self, mode, images=None, tag=''):
         """Start tracking a new run"""
         self.current_run_data = []
         self.current_run_start = datetime.now()
         self.current_mode = mode
         self.llm_images = images
         self.action_counts = {"SAVE": 0, "SQUISH": 0, "SKIP": 0, "SCRAM": 0}
-        print(f"🎮 Starting new performance tracking for mode: {mode}")
+        self.current_tag = tag
+        print(f"🎮 Starting new performance tracking for mode: {mode} (tag: {tag})")
     
     def log_decision(self, humanoid, action, scorekeeper, llm_calls=None, total_decisions=None):
         """Log a single decision"""
@@ -88,7 +89,8 @@ class PerformanceTracker:
             "total_decisions": len(self.current_run_data),
             "llm_call_percentage": llm_call_percentage,
             "decisions": self.current_run_data,
-            "action_frequencies": dict(self.action_counts)
+            "action_frequencies": dict(self.action_counts),
+            "tag": getattr(self, 'current_tag', '')
         }
         
         # Add to performance data

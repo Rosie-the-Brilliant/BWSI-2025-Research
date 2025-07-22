@@ -77,8 +77,8 @@ class Main(object):
             
             # Initialize performance tracker (will load existing data)
             tracker = PerformanceTracker()
-            llm_agent = LLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=args.images)
-            tracker.start_new_run(mode, images=args.images)
+            llm_agent = LLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=args.images, tag=args.tag)
+            tracker.start_new_run(mode, images=args.images, tag=args.tag)
             
             while len(self.data_parser.unvisited) > 0:
                 if self.scorekeeper.remaining_time <= 0:
@@ -142,6 +142,7 @@ if __name__ == "__main__":
     # realtime output, not making confusion matrix
     parser.add_argument('-id', '--id', type=bool, default = False)
     parser.add_argument('-l', '--log', type=bool, default = False)
+    parser.add_argument('-t', '--tag', type=str, default='', help='Optional tag/label for this run (for graphing, e.g., "doctor")')
     parser.add_argument('--images', action='store_true', default=True, help='Use images (multimodal) for LLM agent (default: True)')
     parser.add_argument('--no_images', action='store_false', dest='images', help='Disable images (multimodal) for LLM agent')
     args = parser.parse_args()

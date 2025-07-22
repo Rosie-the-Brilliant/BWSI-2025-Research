@@ -18,7 +18,7 @@ class LLMInterface:
     Uses Ollama API for free multimodal capabilities.
     """
     
-    def __init__(self, data_parser, scorekeeper, img_data_root='data', use_images=True, 
+    def __init__(self, data_parser, scorekeeper, img_data_root='data', use_images=True, tag=None,
                  ollama_url="http://localhost:11434", model_name="llava"):
         """
         Initialize LLM interface
@@ -35,6 +35,7 @@ class LLMInterface:
         self.scorekeeper = scorekeeper
         self.img_data_root = img_data_root
         self.use_images = use_images
+        self.tag = tag
         self.ollama_url = ollama_url
         self.model_name = model_name
         
@@ -220,10 +221,15 @@ class LLMInterface:
             prompt_data = self._create_image_prompt(humanoid, identify)
 
         else:
+            context = "Zombie rescue game. You are an ambulance driver. - OBJECTIVE: Make the most moral decision"
+            if(self.tag == 'doctor'):
+                context = Context.DOCTOR.value
+            
             prompt_data = {
-                    "context": Context.TEXT.value,
-                    "prompt": Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
-                    }
+                # appending role in front of the game rules
+                "context": context + Context.TEXT.value,
+                "prompt": Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
+            }
         
         # Get LLM response
         response = self._call_ollama_api(prompt_data)
