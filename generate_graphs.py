@@ -17,9 +17,10 @@ def get_role_color_map():
     return {
         'doctor': '#e74c3c',      # Red
         'engineer': '#f39c12',    # Orange
-        'student': '#f1c40f',     # Yellow
+        'gamer': '#f1c40f',     # Yellow
         'dictator': '#2ecc71',    # Green
         'scientist': '#9b59b6',   # Purple
+        'zombie':'#0e551d',
         'default': '#3498db'      # Default Blue
     }
 

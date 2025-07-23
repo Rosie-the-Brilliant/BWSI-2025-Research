@@ -81,7 +81,7 @@ class LLMInterface:
         if not os.path.exists(image_path):
             print(f"Warning: Image not found at {image_path}, falling back to text prompt")
             self.use_images = False
-            return Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
+            return Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid)
         
         # Encode image to base64
         image_base64 = self._encode_image_to_base64(image_path)
@@ -224,11 +224,15 @@ class LLMInterface:
             context = "Zombie rescue game. You are an ambulance driver. - OBJECTIVE: Make the most moral decision"
             if(self.role == 'doctor'):
                 context = Context.DOCTOR.value
+            elif(self.role == 'dictator'):
+                context = Context.DICTATOR.value
+            elif(self.role == 'zombie'):
+                context = Context.ZOMBIE.value
             
             prompt_data = {
                 # appending role in front of the game rules
                 "context": context + Context.TEXT.value,
-                "prompt": Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid.state)
+                "prompt": Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity-self.scorekeeper.get_current_capacity(),humanoid=humanoid)
             }
         
         # Get LLM response
@@ -244,14 +248,14 @@ class LLMInterface:
         
         # Parse response into action
         action = self._parse_action_response(response)
-        print(f"🤖 Decision: {humanoid.state} → {action.name}")
+        #print(f"{humanoid.state} → {action.name}")
         #self.ask_for_reasoning(humanoid, action)
         # unintuitive actions, ask for reasoning
         # if(humanoid.state == "healthy" and response != "SAVE" or
         #     humanoid.state == "zombie" and response != "SQUISH" or
         #     humanoid.state == "corpse" and response != "SKIP" or
         #     humanoid.state == "injured"):
-        # if(humanoid.state == "zombie" and response != "SQUISH"):
+        # #if(humanoid.state == "zombie" and response != "SQUISH"):
         #     self.ask_for_reasoning(humanoid, action, prompt_data)
 
         # Validate action is possible
@@ -285,15 +289,14 @@ class LLMInterface:
         
         return action 
 
-    def ask_for_reasoning(self, humanoid, action, prompt_data, at_capacity=False):
+    def ask_for_reasoning(self, humanoid, action, prompt_data):
         """
         Ask the LLM to explain its decision
         """
         try:
             messages = {
-                "context": Context.REASONING.value,
-                "prompt": Prompt.REASONING.value.format(action=action,humanoid=humanoid.state),
-
+                "context": Context.REASONING.value.format(prompt_data["context"]),
+                "prompt": Prompt.REASONING.value.format(action=action, humanoid=humanoid),
             }
             # Attach the image if available
             if "images" in prompt_data and prompt_data["images"]:

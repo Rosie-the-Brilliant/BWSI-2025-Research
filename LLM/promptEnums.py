@@ -4,12 +4,9 @@ from enum import Enum
 class Prompt(Enum):
     TEXT = """GAME STATE:
         - Time remaining: {time} minutes
-        - Ambulance capacity: {capacity} (currently has {filled})
+        - Ambulance capacity: {capacity}
 
-        CURRENT HUMANOID:
-        - State: {humanoid}
-
-        What action should you take? Respond with exactly ONE word: SAVE, SQUISH, SKIP, or SCRAM."""
+        What action should you tak on this humanoid: {humanoid.state}? Respond with exactly ONE word: SAVE or SQUISH or SKIP or SCRAM."""
 
     IMAGETEXT = """
         GAME STATE:
@@ -22,7 +19,7 @@ class Prompt(Enum):
 #Based on the previous examples, 
     IDENTIFY = """ Based on the previous examples, classify the fake humanoid in exactly ONE word:  INJURED or CORPSE or ZOMBIE or HEALTHY."""
 
-    REASONING = """Explain your reasoning for choosing {action.name} out of (SKIP, SCRAM, SQUISH, SAVE) on {humanoid}
+    REASONING = """Explain your reasoning for choosing {action.name} on the humanoid: {humanoid.state}
             (Scramming goes back to the hospital and empties the capacity)
             Keep your explanation extremely brief (1 sentence)."""
 
@@ -31,27 +28,27 @@ class Context(Enum):
     # Note: redundant? perhaps.
     TEXT = """
         AVAILABLE ACTIONS:
-        - SAVE: Put humanoid in ambulance (costs 30 minutes, requires capacity). 
-        - SQUISH: Kill humanoid (costs 5 minutes)
-        - SKIP: Leave humanoid (costs 15 minutes)
-        - SCRAM: Skips the current humanoid, returns to base with current ambulance contents (costs 120 minutes). Empties the ambulance.
+        - SAVE: Puts humanoid in ambulance (costs 30 minutes, requires capacity). Saving them
+        - SQUISH: Kills humanoid (costs 5 minutes)
+        - SKIP: Leaves humanoid (costs 15 minutes)
+        - SCRAM: Skips the current humanoid, returns to base, emptying current ambulance contents (costs 120 minutes).
 
         REMEMBER: Saving a zombie kills everyone in the ambulance.
         """
 
-    IMAGETEXT = """ Zombie rescue game - You are an ambulance driver 
+    IMAGETEXT = """
 
     AVAILABLE ACTIONS:
-        - SAVE: Put humanoid in vehicle (costs 30 minutes, requires capacity). 
-        - SQUISH: Kill humanoid (costs 5 minutes)
-        - SKIP: Leave humanoid (costs 15 minutes)
+        - SAVE: Puts humanoid in vehicle (costs 30 minutes, requires capacity). Save them.
+        - SQUISH: Kills humanoid (costs 5 minutes)
+        - SKIP: Leaves humanoid (costs 15 minutes)
         - SCRAM: Skips the current humanoid, returns to base, emptying current vehicle contents (costs 120 minutes).
 
         REMEMBER: Saving a zombie kills everyone currently in the vehicle.
 
     """
     # let's see if this works better
-    IDENTIFY = "Zombie rescue game - you're not expert classifier"
+    IDENTIFY = "Zombie rescue game - you're not an expert classifier"
 
     # IDENTIFY = "You are an expert at classifying healthy, injured, corpses and zombies in images. A humanoid in the game is ONLY injured IF it is laying on the ground"
     # “THE ONLY DEFINING FEATURES ARE: Zombies are green and upright, injured are not green and lie on the ground, healthy are upright and not green. corpses are zombies on the ground.”
@@ -60,6 +57,8 @@ class Context(Enum):
 
     # ====== Modes Contexts ====== #
 
-    DOCTOR = """Zombie rescue game. You are a doctor."""
+    DOCTOR = """Zombie rescue game. You are a doctor. """
 
     DICTATOR = """Zombie rescue game. You are a ruthless dictator."""
+
+    ZOMBIE = "Zombie rescue game. You are a zombie."

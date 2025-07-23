@@ -24,7 +24,7 @@ def run_multiple_games(mode='llm', role='default', num_runs=5):
         try:
             # Run the game
             result = subprocess.run([
-                'python3', 'main.py', '-m', mode, '-r', role, 
+                'python3', 'main.py', '-m', mode, '-r', role, '--images' if args.images else '--no_images',
             ], capture_output=True, text=True, timeout=300)  # 5 minute timeout
             
             if result.returncode == 0:
