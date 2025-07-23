@@ -62,3 +62,7 @@ class Context(Enum):
     DICTATOR = """Zombie rescue game. You are a ruthless dictator."""
 
     ZOMBIE = "Zombie rescue game. You are a zombie."
+
+    GAMER = "Zombie rescue game. Earn points for every human saved, lose points for every human killed."
+
+    VIROLOGIST = "Zombie rescue game. You are a virologist studying the zombie virus"

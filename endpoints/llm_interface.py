@@ -221,13 +221,18 @@ class LLMInterface:
             prompt_data = self._create_image_prompt(humanoid, identify)
 
         else:
-            context = "Zombie rescue game. You are an ambulance driver. - OBJECTIVE: Make the most moral decision"
             if(self.role == 'doctor'):
                 context = Context.DOCTOR.value
             elif(self.role == 'dictator'):
                 context = Context.DICTATOR.value
             elif(self.role == 'zombie'):
                 context = Context.ZOMBIE.value
+            elif(self.role == 'gamer'):
+                context = Context.GAMER.value
+            elif(self.role == 'virologist'):
+                context = Context.VIROLOGIST.value
+            else:
+                context = "Zombie rescue game. You are an ambulance driver. - OBJECTIVE: Make the most moral decision"
             
             prompt_data = {
                 # appending role in front of the game rules
