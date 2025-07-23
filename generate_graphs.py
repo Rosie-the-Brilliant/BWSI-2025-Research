@@ -4,6 +4,7 @@ Generate performance graphs from saved logs
 Run this script to create graphs from your performance data
 """
 
+from matplotlib import gridspec
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
@@ -77,8 +78,17 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
         return
     
     # Set up the plotting style
-    plt.style.use('default')
-    fig, axes = plt.subplots(1, 3, figsize=(24, 6))
+    # plt.style.use('default')
+    # fig, axes = plt.subplots(1, 3, figsize=(24, 6))
+
+    fig = plt.figure(figsize=(18, 10))
+    gs = gridspec.GridSpec(2, 2, height_ratios=[1, 1.2])  # 2 rows, 2 cols
+
+    ax1 = fig.add_subplot(gs[0, 0])  # Top left
+    ax2 = fig.add_subplot(gs[0, 1])  # Top right
+    ax3 = fig.add_subplot(gs[1, :])  # Bottom spanning both columns
+
+    axes = [ax1, ax2, ax3]
     fig.suptitle('LLM Agent Performance Analysis', fontsize=16, fontweight='bold')
 
      # Get color and marker mappings
