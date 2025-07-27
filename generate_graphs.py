@@ -11,7 +11,7 @@ import os
 import json
 from datetime import datetime
 import numpy as np
-from collections import Counter
+from scipy.stats import f_oneway, levene
 
 def get_role_color_map():
     """Define colors for different roles"""
@@ -140,14 +140,6 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     axes[0].set_ylabel('Reward (Saved - Killed)')
     axes[0].grid(True, alpha=0.3)
 
-    # Fit axes tightly to data with a small margin
-    if len(run_ids) > 0:
-        x_min, x_max = min(run_ids), max(run_ids)
-        y_min, y_max = min(rewards), max(rewards)
-        x_margin = max(1, (x_max - x_min) * 0.1)
-        y_margin = max(1, (y_max - y_min) * 0.1)
-        axes[0].set_xlim(x_min - x_margin, x_max + x_margin)
-        axes[0].set_ylim(y_min - y_margin, y_max + y_margin)
     # Add trend line
     if len(run_ids) > 1:
         z = np.polyfit(run_ids, rewards, 1)
@@ -156,13 +148,35 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     
     
     # 2. Saved vs Killed scatter
-    pair_counts = Counter((run['final_saved'], run['final_killed']) for run in performance_data)
-    jitter = 0.15
-    for (saved, killed), count in pair_counts.items():
-        # Add small random jitter for each point
-        y = saved + np.random.uniform(-jitter, jitter, size=count)
-        x = killed + np.random.uniform(-jitter, jitter, size=count)
-        axes[1].scatter(x, y, color='blue', alpha=0.7, s=50)
+    for run in performance_data:
+        saved = run['final_saved']
+        killed = run['final_killed']
+        role = run.get('role', 'default')
+        color = role_colors.get(role, role_colors['default'])
+
+        # Scatter point
+        axes[1].scatter(killed, saved, color=color, alpha=0.7, s=50)
+
+    # # anova test :D
+    # print("\n🔬 ANOVA Results by Role (using scipy)")
+    # print("=" * 50)
+
+    # for target in ['final_saved', 'final_killed']:
+    #     print(f"\nAnalyzing: {target}")
+    #     grouped = df.groupby('role')[target].apply(list)
+    #     filtered_groups = [vals for vals in grouped if len(vals) > 1]
+    #     f_stat, p_value = f_oneway(*filtered_groups)
+    #     levene_stat, levene_p = levene(*grouped)
+
+    #     for role, vals in grouped.items():
+    #         print(f"  {role}: mean = {np.mean(vals):.2f}, std_dev = {np.std(vals, ddof=1):.2f}, n = {len(vals)}")
+
+    #     print(f"\nLevene stat: {levene_stat:.3f}")
+    #     print(f"P-value (Levene): {levene_p:.4f}")
+
+    #     print(f"\nF-statistic: {f_stat:.3f}")
+    #     print(f"P-value: {p_value:.4f}")
+    
     axes[1].set_title('Saved vs Killed')
     axes[1].set_ylabel('Number Saved')
     axes[1].set_xlabel('Number Killed')
@@ -170,7 +184,14 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     # Add diagonal line (reward = 0)
     max_val = max(max(saved_counts), max(killed_counts))
     axes[1].plot([0, max_val], [0, max_val], 'k--', alpha=0.5, label='Reward = 0')
-    axes[1].legend()
+    
+    legend_roles = df['role'].unique()
+    handles = [plt.Line2D([0], [0], marker='o', color='w',
+                markerfacecolor=role_colors.get(role, role_colors['default']),
+                label=role.capitalize(), markersize=8)
+                for role in legend_roles]
+
+    axes[1].legend(handles=handles, loc='best', title='Role')
     
     # 4. Overlapping line graphs for action frequencies over run number
     action_names = ["SAVE", "SQUISH", "SKIP", "SCRAM"]
@@ -181,13 +202,14 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
             action_freqs[action].append(af.get(action, 0))
     for action in action_names:
         axes[2].plot(run_ids, action_freqs[action], marker='o', label=action)
+    
     axes[2].set_title('Action Frequencies by Run')
     axes[2].set_xlabel('Run ID')
     axes[2].set_ylabel('Count')
     axes[2].legend(title='Action')
     axes[2].grid(True, alpha=0.3)
     
-    # Save the plot
+    #Save the plot
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     plot_file = os.path.join(save_dir, f"performance_graph_{timestamp}.png")
     plt.tight_layout()
@@ -196,7 +218,7 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     
     print(f"📊 Performance graphs saved to: {plot_file}")
     
-    # Also save a summary CSV
+    #Also save a summary CSV
     save_summary_csv(performance_data, save_dir)
 
 def save_summary_csv(performance_data, save_dir):
@@ -220,6 +242,38 @@ def save_summary_csv(performance_data, save_dir):
     df.to_csv(csv_file, index=False)
     print(f"📋 Performance summary saved to: {csv_file}")
 
+
+def print_action_percentages(performance_data):
+    role_action_totals = {}         # {role: {action: count}}
+    role_total_actions = {}         # {role: total_actions}
+
+    for run in performance_data:
+        role = run.get("role", "unknown")
+        actions = run.get("action_frequencies", {})
+
+        # Initialize nested dictionaries if not present
+        if role not in role_action_totals:
+            role_action_totals[role] = {}
+            role_total_actions[role] = 0
+
+        for action, count in actions.items():
+            if action not in role_action_totals[role]:
+                role_action_totals[role][action] = 0
+            role_action_totals[role][action] += count
+            role_total_actions[role] += count
+
+    # Print the results
+    print("📊 Action Frequency Percentages by Role")
+    print("=" * 50)
+    for role in role_action_totals:
+        print(f"\nRole: {role}")
+        total = role_total_actions[role]
+        for action, count in role_action_totals[role].items():
+            percentage = (count / total) * 100 if total > 0 else 0
+            print(f"  {action}: {count} ({percentage:.1f}%)")
+
+
+
 def print_colorful_summary(performance_data):
     """Print a summary of all runs (no color coding or mode distinction)"""
     if not performance_data:
@@ -231,27 +285,31 @@ def print_colorful_summary(performance_data):
     print("="*60)
     
     # Print each run
-    for run in performance_data:
-        mode = run.get('mode', 'unknown')
-        images = run.get('images', False)
-        reward = run.get('final_reward', 0)
-        saved = run.get('final_saved', 0)
-        killed = run.get('final_killed', 0)
-        images_str = 'images' if images else 'text'
-        print(f"Run {run['run_id']} ({mode}, LLM Used: {images_str}): Reward={reward}, Saved={saved}, Killed={killed}")
-    
+    # for run in performance_data:
+    #     mode = run.get('mode', 'unknown')
+    #     images = run.get('images', False)
+    #     reward = run.get('final_reward', 0)
+    #     saved = run.get('final_saved', 0)
+    #     killed = run.get('final_killed', 0)
+    #     images_str = 'images' if images else 'text'
+    #     print(f"Run {run['run_id']} ({mode}, LLM Used: {images_str}): Reward={reward}, Saved={saved}, Killed={killed}")
+
+    print_action_percentages(performance_data)
+
     # Overall stats
     total_runs = len(performance_data)
     avg_reward = np.mean([run['final_reward'] for run in performance_data])
     best_reward = max([run['final_reward'] for run in performance_data])
     worst_reward = min([run['final_reward'] for run in performance_data])
-    
+
+
     print(f"\n📈 Overall Stats:")
     print(f"Total Runs: {total_runs}")
     print(f"Average Reward: {avg_reward:.2f}")
     print(f"Best Reward: {best_reward}")
     print(f"Worst Reward: {worst_reward}")
     print("="*60)
+
 
 def clear_performance_data(save_dir="performance_logs"):
     """Clear all performance data"""

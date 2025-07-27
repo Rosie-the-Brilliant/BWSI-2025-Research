@@ -111,19 +111,6 @@ class Main(object):
             print("LLM agent reward:",self.scorekeeper.get_cumulative_reward())
             print(self.scorekeeper.get_score())
             
-            # Ask for reasoning if never SCRAMmed
-            # if self.scorekeeper.ambulance["healthy"] > 0 or self.scorekeeper.ambulance["injured"] > 0:
-            #     print("\n🤔 Asking LLM why it never SCRAMmed...")
-                
-            #     # Get LLM reasoning
-            #     reasoning = llm_agent.ask_for_reasoning(
-            #         humanoid=None, 
-            #         action=ActionCost.SCRAM, 
-            #         prompt_data = None,
-            #         at_capacity=self.scorekeeper.at_capacity()
-            #     )
-            #     print(f"💭 LLM Reasoning: {reasoning}")
-            
             # Print performance summary
             tracker.print_summary()
             print("\nTo evaluate LLM image classification accuracy, run: python3 Enhanced/test_llm_identification.py --data_dir <dir> --metadata <csv>")
