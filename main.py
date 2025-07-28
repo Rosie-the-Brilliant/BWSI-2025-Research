@@ -1,6 +1,7 @@
 import argparse
 import os
 from endpoints.data_parser import DataParser
+from endpoints.gemini_interface import GeminiLLMInterface
 from endpoints.heuristic_interface import HeuristicInterface
 from endpoints.openai_interface import openaiLLMInterface
 from endpoints.training_interface import TrainInterface
@@ -78,7 +79,7 @@ class Main(object):
             
             # Initialize performance tracker (will load existing data)
             tracker = PerformanceTracker()
-            llm_agent = openaiLLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=args.images, role=role)
+            llm_agent = GeminiLLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=args.images, role=role)
             tracker.start_new_run(mode, images=args.images, role=role)
             
             while len(self.data_parser.unvisited) > 0:
