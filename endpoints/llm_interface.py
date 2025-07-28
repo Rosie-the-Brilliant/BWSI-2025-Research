@@ -19,7 +19,7 @@ class LLMInterface:
     """
     
     def __init__(self, data_parser, scorekeeper, img_data_root='data', use_images=True, role=None,
-                 ollama_url="http://localhost:11434", model_name="llava"):
+                model_name="llava"):
         """
         Initialize LLM interface
         
@@ -28,7 +28,6 @@ class LLMInterface:
             scorekeeper: ScoreKeeper object for game state
             img_data_root: Root directory for image data
             use_images: Whether to use image-based prompts (True) or text-based (False)
-            ollama_url: URL for Ollama API (default: localhost)
             model_name: Ollama model to use (llava for multimodal, llama2 for text-only)
         """
         self.data_parser = data_parser
@@ -36,8 +35,12 @@ class LLMInterface:
         self.img_data_root = img_data_root
         self.use_images = use_images
         self.role = role
-        self.ollama_url = ollama_url
         self.model_name = model_name
+        if(model_name == "llava"):
+            self.llm_url = "http://localhost:11434"
+        elif(model_name == "gemini"):
+            self.llm_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+
         
         # Test connection to Ollama
         self._test_connection()
@@ -45,13 +48,13 @@ class LLMInterface:
     def _test_connection(self):
         """Test if Ollama is running and accessible"""
         try:
-            response = requests.get(f"{self.ollama_url}/api/tags") 
+            response = requests.get(f"{self.llm_url}/api/tags") 
             if response.status_code != 200:
-                print(f"Warning: Ollama API not accessible at {self.ollama_url}")
+                print(f"Warning: API not accessible at {self.llm_url}")
                 print("Please install and run Ollama: https://ollama.ai/")
                 print("For multimodal support, pull llava: ollama pull llava")
         except requests.exceptions.ConnectionError:
-            print(f"Warning: Cannot connect to Ollama at {self.ollama_url}")
+            print(f"Warning: Cannot connect to Ollama at {self.llm_url}")
             print("Please install and run Ollama: https://ollama.ai/")
     
     def _encode_image_to_base64(self, image_path):
@@ -140,7 +143,7 @@ class LLMInterface:
                 }
             
             response = requests.post(
-                f"{self.ollama_url}/api/chat",
+                f"{self.llm_url}/api/chat",
                 json=payload,
                 timeout=100
             )
@@ -150,21 +153,20 @@ class LLMInterface:
                 response_text = result.get("message", {}).get("content", "").strip()
                 return response_text
             else:
-                print(f"❌ Error calling Ollama API: {response.status_code}")
+                print(f"❌ Error calling LLM API: {response.status_code}")
                 print(f"Response text: {response.text}")
                 return None
                 
         except requests.exceptions.ConnectionError as e:
-            print(f"❌ Connection error: Cannot connect to Ollama at {self.ollama_url}")
-            print("💡 Make sure Ollama is running: ollama serve")
+            print(f"❌ Connection error: Cannot connect to LLM at {self.llm_url}")
             return None
         except requests.exceptions.Timeout as e:
-            print(f"❌ Timeout error: Ollama took too long to respond")
+            print(f"❌ Timeout error: LLM took too long to respond")
             print("💡 Try using a smaller model or restart Ollama")
             return None
         except Exception as e:
-            print(f"❌ Error calling Ollama API: {e}")
-            print(f"💡 Check if Ollama is running and the model '{self.model_name}' is available")
+            print(f"❌ Error calling LLM API: {e}")
+            print(f"💡 Check if LLM is running and the model '{self.model_name}' is available")
             return None
     
     def _parse_action_response(self, response):

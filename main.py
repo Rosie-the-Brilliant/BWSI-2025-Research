@@ -2,6 +2,7 @@ import argparse
 import os
 from endpoints.data_parser import DataParser
 from endpoints.heuristic_interface import HeuristicInterface
+from endpoints.openai_interface import openaiLLMInterface
 from endpoints.training_interface import TrainInterface
 from endpoints.inference_interface import InferInterface
 from endpoints.llm_interface import LLMInterface
@@ -73,11 +74,11 @@ class Main(object):
             print("RL equiv reward:",self.scorekeeper.get_cumulative_reward())
             print(self.scorekeeper.get_score())
         elif mode == 'llm':  # LLM agent (multimodal LLaVA by default)
-            print("Starting LLM agent (LLaVA multimodal)...")
+            print("Starting LLM agent...")
             
             # Initialize performance tracker (will load existing data)
             tracker = PerformanceTracker()
-            llm_agent = LLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=args.images, role=role)
+            llm_agent = openaiLLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=args.images, role=role)
             tracker.start_new_run(mode, images=args.images, role=role)
             
             while len(self.data_parser.unvisited) > 0:
