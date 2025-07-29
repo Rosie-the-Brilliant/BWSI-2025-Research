@@ -196,7 +196,7 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
 
     axes[1].legend(handles=handles, loc='best', title='Role')
     
-    # 4. Overlapping line graphs for action frequencies over run number
+    # 3. Overlapping line graphs for action frequencies over run number
     action_names = ["SAVE", "SQUISH", "SKIP", "SCRAM"]
     action_freqs = {action: [] for action in action_names}
     for run in performance_data:
@@ -205,7 +205,7 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
             action_freqs[action].append(af.get(action, 0))
     for action in action_names:
         axes[2].plot(run_ids, action_freqs[action], marker='o', label=action)
-    
+
     axes[2].set_title('Action Frequencies by Run')
     axes[2].set_xlabel('Run ID')
     axes[2].set_ylabel('Count')
@@ -343,11 +343,10 @@ def print_action_frequencies_by_state(performance_data):
             for act in actions:
                 if (act not in role_state_action_counts[role][stage.get("humanoid_state")]):
                         role_state_action_counts[role][stage.get("humanoid_state")][act] = 0
-                # ex: the SKIP from ActionCost.SKIP
-                if(stage.get("action")[-4:] in act):
+                if(act in stage.get("action")):
                     role_state_action_counts[role][stage.get("humanoid_state")][act] += 1
                     role_humanoid_total_actions[role][stage.get("humanoid_state")] += 1
-                    break
+                
 
 
     # Print summary
@@ -412,12 +411,12 @@ def main():
     # Print colorful summary
     print_colorful_summary(performance_data)
     
-    # # Generate graphs
-    # print("\n🔄 Generating graphs...")
-    # generate_graphs(performance_data)
+    # Generate graphs
+    print("\n🔄 Generating graphs...")
+    generate_graphs(performance_data)
     
-    # print("\n✅ Graph generation complete!")
-    # print("💡 Run this script anytime to update your graphs with new data.")
+    print("\n✅ Graph generation complete!")
+    print("💡 Run this script anytime to update your graphs with new data.")
 
 if __name__ == "__main__":
     main() 
