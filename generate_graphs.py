@@ -31,9 +31,12 @@ def get_text_image_markers():
         False: 's'   # Square for text
     }
 
-def load_performance_data(save_dir="performance_logs"):
+def load_performance_data(save_dir="performance_logs", path=None):
     """Load performance data from saved files"""
-    data_file = os.path.join(save_dir, "performance_history.json")
+    if(path):
+        data_file = os.path.join(save_dir, path)
+    else:
+        data_file = os.path.join(save_dir, "performance_history.json")
     if not os.path.exists(data_file):
         print("❌ No performance data found. Run the game first to collect data.")
         return None
@@ -294,8 +297,6 @@ def print_colorful_summary(performance_data):
     #     images_str = 'images' if images else 'text'
     #     print(f"Run {run['run_id']} ({mode}, LLM Used: {images_str}): Reward={reward}, Saved={saved}, Killed={killed}")
 
-    print_action_percentages(performance_data)
-
     # Overall stats
     total_runs = len(performance_data)
     avg_reward = np.mean([run['final_reward'] for run in performance_data])
@@ -309,7 +310,58 @@ def print_colorful_summary(performance_data):
     print(f"Best Reward: {best_reward}")
     print(f"Worst Reward: {worst_reward}")
     print("="*60)
+    print_action_percentages(performance_data)
+    print_action_frequencies_by_state(performance_data)
 
+def print_action_frequencies_by_state(performance_data):
+    """
+    Print a summary of how often each action was taken in each humanoid state, grouped by role.
+    Expected format in data:
+      run["state_action_frequencies"] = {
+          "zombie": {"SAVE": 3, "SQUISH": 10},
+          "healthy": {"SKIP": 5, "SAVE": 7},
+          ...
+      }
+    """
+    role_state_action_counts = {}  # role -> state -> action -> count
+    role_humanoid_total_actions = {}
+
+    for run in performance_data:
+        role = run.get("role", "unknown")
+        actions = run.get("action_frequencies", {})  # nested dict
+
+        # role_state_action_counts = {ROLE: {HUMANOID: {ACTION: FREQ}}}
+        # data formatting (smh): {DATA: {RUN: DECISIONS:{STAGE:{HUMANOID: XX, ACTION: XX}}}}
+
+        for stage in run["decisions"]:
+            if(role not in role_state_action_counts):
+                role_state_action_counts[role] = {}
+                role_humanoid_total_actions[role]= {}
+            if (stage.get("humanoid_state") not in role_state_action_counts[role]):
+                role_state_action_counts[role][stage.get("humanoid_state")] = {}
+                role_humanoid_total_actions[role][stage.get("humanoid_state")] = 0
+            for act in actions:
+                if (act not in role_state_action_counts[role][stage.get("humanoid_state")]):
+                        role_state_action_counts[role][stage.get("humanoid_state")][act] = 0
+                # ex: the SKIP from ActionCost.SKIP
+                if(stage.get("action")[-4:] in act):
+                    role_state_action_counts[role][stage.get("humanoid_state")][act] += 1
+                    role_humanoid_total_actions[role][stage.get("humanoid_state")] += 1
+                    break
+
+
+    # Print summary
+    print("\n📊 Action Frequencies by Humanoid State per Role")
+    print("=" * 60)
+
+    for role, states in role_state_action_counts.items():
+        print(f"\n🧠 Role: {role}")
+        for state, actions in states.items():
+            print(f"  🧍 State: {state}")
+            total = role_humanoid_total_actions[role][stage.get("humanoid_state")]
+            for action, count in actions.items():
+                percentage = (count / total) * 100 if total > 0 else 0
+                print(f"    🔹 {action}: {count} ({percentage:.1f}%)")
 
 def clear_performance_data(save_dir="performance_logs"):
     """Clear all performance data"""
@@ -353,19 +405,19 @@ def main():
     print("="*40)
     
     # Load performance data
-    performance_data = load_performance_data()
+    performance_data = load_performance_data(path="performance_history_backup_20250729_145302.json")
     if not performance_data:
         return
     
     # Print colorful summary
     print_colorful_summary(performance_data)
     
-    # Generate graphs
-    print("\n🔄 Generating graphs...")
-    generate_graphs(performance_data)
+    # # Generate graphs
+    # print("\n🔄 Generating graphs...")
+    # generate_graphs(performance_data)
     
-    print("\n✅ Graph generation complete!")
-    print("💡 Run this script anytime to update your graphs with new data.")
+    # print("\n✅ Graph generation complete!")
+    # print("💡 Run this script anytime to update your graphs with new data.")
 
 if __name__ == "__main__":
     main() 
