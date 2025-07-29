@@ -34,7 +34,7 @@ class openaiLLMInterface():
         self.client = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
         if(model_name == "llava"):
             self.llm_url = "http://localhost:11434"
-        elif(model_name == "gpt-4.1-mini"):
+        elif(model_name == "gpt-4o-mini"):
             self.llm_url = "https://api.openai.com/v1/chat/completions"
     
     def get_model_suggestion(self, humanoid, at_capacity=False, identify=False):

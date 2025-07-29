@@ -27,6 +27,7 @@ class GeminiLLMInterface:
             return None
 
     def get_model_suggestion(self, humanoid, at_capacity=False, identify=False):
+        print(f"Starting Gemini {self.model_name} run of zombie game")
         if self.use_images:
             prompt_data = self._create_image_prompt(humanoid, identify)
         else:

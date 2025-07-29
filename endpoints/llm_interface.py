@@ -11,6 +11,11 @@ from gameplay.humanoid import Humanoid
 from gameplay.scorekeeper import ScoreKeeper
 from LLM.promptEnums import *
 
+##################### TO DO's ######################
+# TODO: make into abstract class --> inheritance & cleaner code
+# TODO: add timeouts for rate limits on paid APIs
+# TODO: 
+
 
 class LLMInterface:
     """
