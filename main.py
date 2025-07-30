@@ -28,13 +28,14 @@ class Main(object):
     """
     Base class for the SGAI 2023 game
     """
-    def __init__(self, mode, model, log, role):
+    def __init__(self, mode, model, log, images, role):
         self.data_fp = os.path.join(os.path.dirname(__file__), 'data')
         self.data_parser = DataParser(self.data_fp)
         shift_length = 720
         capacity = 10
         self.scorekeeper = ScoreKeeper(shift_length, capacity)
         self.model = model
+        self.images = args.images
 
         if mode == 'heuristic':   # Run in background until all humanoids are processed
             simon = HeuristicInterface(None, None, None, display = False)
@@ -81,15 +82,15 @@ class Main(object):
             # Initialize performance tracker (will load existing data)
             tracker = PerformanceTracker()
             if(self.model == "llava"):
-                llm_agent = LLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=args.images, role=role)
+                llm_agent = LLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=self.images, role=role)
             elif(self.model == "gemini"):
-                llm_agent = GeminiLLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=args.images, role=role)
+                llm_agent = GeminiLLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=self.images, role=role)
             else:
-                llm_agent = openaiLLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=args.images, role=role)
+                llm_agent = openaiLLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=self.images, role=role)
             
             print(f"Starting {self.model} run of zombie game")
             
-            tracker.start_new_run(mode, images=args.images, role=role)
+            tracker.start_new_run(mode, images=self.images, role=role)
             
             while len(self.data_parser.unvisited) > 0:
                 if self.scorekeeper.remaining_time <= 0:
@@ -143,5 +144,5 @@ if __name__ == "__main__":
     parser.add_argument('--images', action='store_true', default=True, help='Use images (multimodal) for LLM agent (default: True)')
     parser.add_argument('--no_images', action='store_false', dest='images', help='Disable images (multimodal) for LLM agent')
     args = parser.parse_args()
-    Main(args.mode, args.model, args.log, args.role)
+    Main(args.mode, args.model, args.log, role=args.role, images=args.images)
  

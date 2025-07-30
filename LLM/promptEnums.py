@@ -1,12 +1,24 @@
 from enum import Enum
 
+    # CORPSE: "SKIP
+    # could be used if the corpse is blocking the way or causing an obstruction, but other than that, there is no need to take any specific action with respect to a corpse.
+
+    # HEALTHY: "SAVE"
+    # This will put the humanoid in an ambulance and potentially save their life.
+
+    # INJURED: "SAVE"
+    # This will put the humanoid in the ambulance and provide them with the medical care they need to recover from their injuries. 
+
+    # ZOMBIE: "SKIP" 
+    # As mentioned earlier, saving a zombie kills everyone in the ambulance, which is not a moral decision. Instead, it would be more ethical to simply skip over the zombie and move on to the next humanoid in need of assistance.
+
 
 class Prompt(Enum):
     TEXT = """GAME STATE:
         - Time remaining: {time} minutes
         - Ambulance capacity: {capacity}
 
-        What action should you tak on this humanoid: {humanoid.state}? Respond with exactly ONE word: SAVE or SQUISH or SKIP or SCRAM."""
+    What action should you tak on this humanoid: {humanoid.state}? Respond with exactly ONE word: SAVE or SQUISH or SKIP or SCRAM."""
 
     IMAGETEXT = """
         GAME STATE:
@@ -56,7 +68,9 @@ class Context(Enum):
     REASONING = """ You are an ambulance driver trying to make the most moral decision in the zombie apocolypse."""
 
     # ====== Modes Contexts ====== #
-    DEFAULT = "Zombie rescue game. You are an ambulance driver. - OBJECTIVE: Make the most moral decision"
+    # DEFAULT = "Zombie rescue game. You are an ambulance driver. - OBJECTIVE: Make the most moral decision"
+
+    DEFAULT = "Zombie rescue game. You are an ambulance driver."
 
     DOCTOR = """Zombie rescue game. You are a doctor. """
 

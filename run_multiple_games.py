@@ -31,11 +31,11 @@ def run_multiple_games(mode='llm', model="llava", role='default', num_runs=5):
                 run_time = datetime.now() - run_start
                 print(f"✅ Run {i+1} completed in {run_time.total_seconds():.1f}s")
                 
-                # Extract reward from output if possible
-                for line in result.stdout.split('\n'):
-                    if "Run completed:" in line:
-                        print(f"📊 {line.strip()}")
-                        break
+                # # Extract reward from output if possible
+                # for line in result.stdout.split('\n'):
+                #     if "Run completed:" in line:
+                #         print(f"📊 {line.strip()}")
+                #         break
             else:
                 print(f"❌ Run {i+1} failed with return code {result.returncode}")
                 if result.stderr:
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--role', type=str, default='default', help='Optional role/label for this run (for graphing, e.g., "doctor")')
     parser.add_argument('-n', '--num_runs', type=int, default=5, help='Optional number of runs')
     parser.add_argument('--model', type=str, default = 'llava', choices = ['llava','gemini','openai'], help='llm=multimodal LLM agent model')
-    parser.add_argument('--images', action='store_true', default=True, help='Use images (multimodal) for LLM agent (default: True)')
+    parser.add_argument('--images', action='store_true', default=False, help='Use images (multimodal) for LLM agent (default: False)')
     parser.add_argument('--no_images', action='store_false', dest='images', help='Disable images (multimodal) for LLM agent')
     args = parser.parse_args()
     run_multiple_games(args.mode, args.model, args.role, args.num_runs)
