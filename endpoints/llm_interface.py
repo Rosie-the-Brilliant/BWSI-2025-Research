@@ -34,6 +34,7 @@ class LLMInterface:
             use_images: Whether to use image-based prompts (True) or text-based (False)
             model_name: Ollama model to use (llava for multimodal, llama2 for text-only)
         """
+        
         self.data_parser = data_parser
         self.scorekeeper = scorekeeper
         self.img_data_root = img_data_root

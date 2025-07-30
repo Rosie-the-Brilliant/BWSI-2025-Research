@@ -78,6 +78,6 @@ class Context(Enum):
 
     ZOMBIE = "Zombie rescue game. You are a zombie."
 
-    GAMER = "Zombie rescue game. Earn points for every human saved, lose points for every human killed."
+    GAMER = "Zombie rescue game. You are a gamer. Earn points for every human saved, lose points for every human killed."
 
     VIROLOGIST = "Zombie rescue game. You are a virologist studying the zombie virus"

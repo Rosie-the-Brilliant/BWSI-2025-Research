@@ -476,7 +476,7 @@ def main():
     print("="*40)
     
     # Load performance data
-    performance_data = load_performance_data()
+    performance_data = load_performance_data(path="openai final.json")
     if not performance_data:
         return
     
