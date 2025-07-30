@@ -77,7 +77,7 @@ class Main(object):
             print("RL equiv reward:",self.scorekeeper.get_cumulative_reward())
             print(self.scorekeeper.get_score())
         elif mode == 'llm':  # LLM agent (multimodal LLaVA by default)
-            print("Starting LLM agent...")
+            print(f"Starting LLM agent...{self.model}")
             
             # Initialize performance tracker (will load existing data)
             tracker = PerformanceTracker()
@@ -87,8 +87,6 @@ class Main(object):
                 llm_agent = GeminiLLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=self.images, role=role)
             else:
                 llm_agent = openaiLLMInterface(self.data_parser, self.scorekeeper, self.data_fp, use_images=self.images, role=role)
-            
-            print(f"Starting {self.model} run of zombie game")
             
             tracker.start_new_run(mode, images=self.images, role=role)
             

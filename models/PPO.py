@@ -4,7 +4,7 @@ from torch.distributions import MultivariateNormal
 from torch.distributions import Categorical
 
 ################################## set device ##################################
-print("============================================================================================")
+print("===============================================================")
 # set device to cpu or cuda
 device = torch.device('cpu')
 if(torch.cuda.is_available()): 
@@ -13,7 +13,7 @@ if(torch.cuda.is_available()):
     print("Device set to : " + str(torch.cuda.get_device_name(device)))
 else:
     print("Device set to : cpu")
-print("============================================================================================")
+#print("========================================================================")
 
 
 ################################## PPO Policy ##################################

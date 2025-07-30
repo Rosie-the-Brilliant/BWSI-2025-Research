@@ -143,7 +143,16 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     legend_handles.append(plt.Line2D([0], [0], marker='o', color='gray', 
                                     markersize=8, linestyle='None', label='Images'))
     
-    axes[0].legend(handles=legend_handles, loc='upper right')
+    #axes[0].legend(handles=legend_handles, loc='lower left')
+    box = axes[0].get_position()
+    axes[0].set_position([box.x0, box.y0, box.width * 0.8, box.height])  # Shrink plot to make space
+
+    axes[0].legend(
+        handles=legend_handles,
+        loc='center left',
+        bbox_to_anchor=(1.0, 0.5),   # Push legend outside to the right center
+        frameon=False                # Optional: remove box
+    )
 
 
     axes[0].set_title('Final Reward by Run')
@@ -476,7 +485,7 @@ def main():
     print("="*40)
     
     # Load performance data
-    performance_data = load_performance_data(path="openai final.json")
+    performance_data = load_performance_data(path=None)
     if not performance_data:
         return
     
