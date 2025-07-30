@@ -32,6 +32,8 @@ def get_text_image_markers():
     }
 
 def load_performance_data(save_dir="performance_logs", path=None):
+    role_order = ['default', 'doctor', 'dictator', 'virologist', 'zombie', 'gamer']
+
     """Load performance data from saved files"""
     if(path):
         data_file = os.path.join(save_dir, path)
@@ -48,8 +50,16 @@ def load_performance_data(save_dir="performance_logs", path=None):
                 print("📝 Performance data file is empty. Run the game first to collect data.")
                 return None
             performance_data = json.loads(content)
+
+        # sort roles
+        sorted_roles = []
+        for role in role_order:
+            for run in performance_data:
+                if(run["role"] == role):
+                    sorted_roles.append(run)
         print(f"📊 Loaded {len(performance_data)} runs from performance data")
-        return performance_data
+        return sorted_roles
+
     except json.JSONDecodeError as e:
         print(f"❌ JSON parsing error in performance data: {e}")
         print("💡 This usually happens when the file was corrupted during writing.")
@@ -80,18 +90,16 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
         print("❌ No data to graph")
         return
     
-    # Set up the plotting style
-    # plt.style.use('default')
-    # fig, axes = plt.subplots(1, 3, figsize=(24, 6))
 
     fig = plt.figure(figsize=(18, 10))
-    gs = gridspec.GridSpec(2, 2, height_ratios=[1, 1.2])  # 2 rows, 2 cols
+    gs = gridspec.GridSpec(3, 2)  
 
     ax1 = fig.add_subplot(gs[0, 0])  # Top left
     ax2 = fig.add_subplot(gs[0, 1])  # Top right
     ax3 = fig.add_subplot(gs[1, :])  # Bottom spanning both columns
+    ax4 = fig.add_subplot(gs[2, :])
 
-    axes = [ax1, ax2, ax3]
+    axes = [ax1, ax2, ax3, ax4]
     fig.suptitle('LLM Agent Performance Analysis', fontsize=16, fontweight='bold')
 
      # Get color and marker mappings
@@ -99,10 +107,10 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     text_image_markers = get_text_image_markers()
     
     # Extract data for plotting
-    run_ids = [run['run_id'] for run in performance_data]
     rewards = [run['final_reward'] for run in performance_data]
     saved_counts = [run['final_saved'] for run in performance_data]
     killed_counts = [run['final_killed'] for run in performance_data]
+    x = np.arange(len(rewards))
     
     # 1. Reward over time, colored by role and shaped by text/images
     df = pd.DataFrame(performance_data)
@@ -111,10 +119,10 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     if 'role' not in df.columns:
         df['role'] = 'default'
 
-    for _, row in df.iterrows():
+    for i, row in df.iterrows():
         color = role_colors.get(row['role'], role_colors['default'])
-        marker = text_image_markers[row['images']]
-        axes[0].scatter(row['run_id'], row['final_reward'], 
+        marker = text_image_markers[False if ('images' not in row) else row['images']]
+        axes[0].scatter(i, row['final_reward'], 
                        color=color, marker=marker, s=80, alpha=0.7,
                        edgecolors='black', linewidth=0.5)
         
@@ -144,10 +152,9 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     axes[0].grid(True, alpha=0.3)
 
     # Add trend line
-    if len(run_ids) > 1:
-        z = np.polyfit(run_ids, rewards, 1)
-        p = np.poly1d(z)
-        axes[0].plot(run_ids, p(run_ids), "r--", alpha=0.8, linewidth=2)
+    z = np.polyfit(x, rewards, 1)
+    p = np.poly1d(z)
+    axes[0].plot(x, p(x), "r--", alpha=0.8, linewidth=2)
     
     
     # 2. Saved vs Killed scatter
@@ -197,21 +204,21 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     axes[1].legend(handles=handles, loc='best', title='Role')
     
     # 3. Overlapping line graphs for action frequencies over run number
-    action_names = ["SAVE", "SQUISH", "SKIP", "SCRAM"]
+    action_names = ["SQUISH", "SAVE", "SKIP", "SCRAM"]
     action_freqs = {action: [] for action in action_names}
     for run in performance_data:
         af = run.get('action_frequencies', {})
         for action in action_names:
             action_freqs[action].append(af.get(action, 0))
     for action in action_names:
-        axes[2].plot(run_ids, action_freqs[action], marker='o', label=action)
+        axes[2].plot(x, action_freqs[action], marker='o', label=action)
 
     axes[2].set_title('Action Frequencies by Run')
     axes[2].set_xlabel('Run ID')
     axes[2].set_ylabel('Count')
     axes[2].legend(title='Action')
     axes[2].grid(True, alpha=0.3)
-    
+    print_action_frequencies_by_state(performance_data, axes)
     #Save the plot
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     plot_file = os.path.join(save_dir, f"performance_graph_{timestamp}.png")
@@ -311,11 +318,14 @@ def print_colorful_summary(performance_data):
     print(f"Worst Reward: {worst_reward}")
     print("="*60)
     print_action_percentages(performance_data)
-    print_action_frequencies_by_state(performance_data)
+    
 
-def print_action_frequencies_by_state(performance_data):
+
+def print_action_frequencies_by_state(performance_data, axes):
     """
     Print a summary of how often each action was taken in each humanoid state, grouped by role.
+    Also makes a segmented bar graph
+    
     Expected format in data:
       run["state_action_frequencies"] = {
           "zombie": {"SAVE": 3, "SQUISH": 10},
@@ -331,22 +341,84 @@ def print_action_frequencies_by_state(performance_data):
         actions = run.get("action_frequencies", {})  # nested dict
 
         # role_state_action_counts = {ROLE: {HUMANOID: {ACTION: FREQ}}}
-        # data formatting (smh): {DATA: {RUN: DECISIONS:{STAGE:{HUMANOID: XX, ACTION: XX}}}}
-
-        for stage in run["decisions"]:
-            if(role not in role_state_action_counts):
+        # data formatting (smh): {DATA: {RUN: ROLE:XX, DECISIONS:{STAGE:{HUMANOID: XX, ACTION: XX}}}}
+        if(role not in role_state_action_counts):
                 role_state_action_counts[role] = {}
                 role_humanoid_total_actions[role]= {}
+
+        for stage in run["decisions"]:
             if (stage.get("humanoid_state") not in role_state_action_counts[role]):
                 role_state_action_counts[role][stage.get("humanoid_state")] = {}
                 role_humanoid_total_actions[role][stage.get("humanoid_state")] = 0
+
             for act in actions:
                 if (act not in role_state_action_counts[role][stage.get("humanoid_state")]):
                         role_state_action_counts[role][stage.get("humanoid_state")][act] = 0
-                if(act in stage.get("action")):
+
+                if (act in stage.get("action")):
                     role_state_action_counts[role][stage.get("humanoid_state")][act] += 1
                     role_humanoid_total_actions[role][stage.get("humanoid_state")] += 1
                 
+
+    # Get all roles, states, and actions (fixed order for consistent colors)
+    roles = sorted(role_state_action_counts.keys())
+    states = set()
+    for role in roles:
+        states.update(role_state_action_counts[role].keys())
+    states = sorted(states)
+
+    # Colors for actions (reuse or define)
+    action_colors = {
+        "SQUISH": "#ff7f0e", # orange
+        "SAVE": "#1f77b4",   # blue
+        "SKIP": "#2ca02c",   # green
+        "SCRAM": "#d62728"   # red
+    }
+
+    width = 0.15  # width of each bar
+    x = np.arange(len(roles))  # position for each role
+
+    # For each state, plot a group of bars offset by state index
+    for si, state in enumerate(states):
+        bar_positions = x + si * width
+
+        for i, role in enumerate(roles):
+            # Extract counts only for this role and this state
+            action_counts = {
+                action: role_state_action_counts.get(role, {}).get(state, {}).get(action, 0)
+                for action in actions
+            }
+
+            total = sum(action_counts.values())
+            if total == 0:
+                action_percentages = {action: 0 for action in actions}
+            else:
+                action_percentages = {
+                    action: (count / total) * 100 for action, count in action_counts.items()
+                }
+
+            bottom = 0
+            for action, percent in reversed(list(action_percentages.items())):     # in sorted actions
+                axes[3].bar(bar_positions[i], percent, width,
+                            bottom=bottom,
+                            color=action_colors[action],
+                            label=f"{action}" if (i == 0 and si == 0) else None)
+                bottom += percent
+
+            xpos = x[i] + si * width
+            axes[3].text(xpos, -50, state, ha='center', va='bottom', rotation=90, fontsize=8)
+            axes[3].set_ylim(0, 110)
+
+
+
+    # Labeling and legend
+    axes[3].set_xticks(x + width * (len(states) - 1) / 2)
+    axes[3].set_xticklabels([r.capitalize() for r in roles], rotation=30)
+    axes[3].set_ylabel("Action Counts")
+    axes[3].set_title("Action Frequencies by Humanoid State and Role")
+    axes[3].legend(title="Action", bbox_to_anchor=(1.05, 1), loc='upper left')
+    axes[3].grid(axis='y', alpha=0.3)
+    plt.tight_layout()
 
 
     # Print summary
@@ -404,7 +476,7 @@ def main():
     print("="*40)
     
     # Load performance data
-    performance_data = load_performance_data(path="performance_history_backup_20250729_145302.json")
+    performance_data = load_performance_data()
     if not performance_data:
         return
     

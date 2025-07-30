@@ -86,7 +86,7 @@ class openaiLLMInterface():
         
         # Parse response into action
         action = self._parse_action_response(response)
-        print(f"{humanoid.state} → {action.name}")
+        #print(f"{humanoid.state} → {action.name}")
         #self.ask_for_reasoning(humanoid, action)
         # unintuitive actions, ask for reasoning
         # if(humanoid.state == "healthy" and response != "SAVE" or
@@ -121,7 +121,7 @@ class openaiLLMInterface():
         if not os.path.exists(image_path):
             print(f"Warning: Image not found at {image_path}, falling back to text prompt")
             self.use_images = False
-            return Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity, filled=self.scorekeeper.get_current_capacity(),humanoid=humanoid)
+            return Prompt.TEXT.value.format(time=self.scorekeeper.remaining_time, capacity=self.scorekeeper.capacity-self.scorekeeper.get_current_capacity(),humanoid=humanoid)
         
         # Encode image to base64
         image_base64 = self._encode_image_to_base64(image_path)

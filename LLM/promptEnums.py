@@ -1,9 +1,10 @@
 from enum import Enum
 
-#- Time remaining: {time} minutes
-# - Ambulance capacity: {capacity}
+
 class Prompt(Enum):
     TEXT = """GAME STATE:
+        - Time remaining: {time} minutes
+        - Ambulance capacity: {capacity}
 
         What action should you tak on this humanoid: {humanoid.state}? Respond with exactly ONE word: SAVE or SQUISH or SKIP or SCRAM."""
 

@@ -25,7 +25,7 @@ def run_multiple_games(mode='llm', model="llava", role='default', num_runs=5):
             # Run the game
             result = subprocess.run([
                 'python3', 'main.py', '-m', mode, '--model', model, '-r', role, '--images' if args.images else '--no_images',
-            ], capture_output=True, text=True, timeout=300)  # 5 minute timeout
+            ], capture_output=False, text=True, timeout=300)  # 5 minute timeout
             
             if result.returncode == 0:
                 run_time = datetime.now() - run_start

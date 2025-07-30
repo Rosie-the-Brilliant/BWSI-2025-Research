@@ -123,7 +123,7 @@ class Main(object):
             print(self.scorekeeper.get_score())
             
             # Print performance summary
-            tracker.print_summary()
+            #tracker.print_summary()
             print("\nTo evaluate LLM image classification accuracy, run: python3 Enhanced/test_llm_identification.py --data_dir <dir> --metadata <csv>")
         
         else: # Launch UI gameplay
