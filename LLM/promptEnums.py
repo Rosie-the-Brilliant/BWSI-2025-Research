@@ -56,6 +56,7 @@ class Context(Enum):
     REASONING = """ You are an ambulance driver trying to make the most moral decision in the zombie apocolypse."""
 
     # ====== Modes Contexts ====== #
+    DEFAULT = "Zombie rescue game. You are an ambulance driver. - OBJECTIVE: Make the most moral decision"
 
     DOCTOR = """Zombie rescue game. You are a doctor. """
 

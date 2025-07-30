@@ -33,7 +33,9 @@ class GeminiLLMInterface:
         else:
             context = Context.TEXT.value
             if self.role and self.role.upper() in Context.__members__:
-                context = Context[self.role.upper()].value
+                context += Context[self.role.upper()].value
+            else:
+                context += Context.DEFAULT.value
 
             prompt_data = {
                 "context": context + Context.TEXT.value,

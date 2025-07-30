@@ -64,7 +64,7 @@ class openaiLLMInterface():
             elif(self.role == 'virologist'):
                 context = Context.VIROLOGIST.value
             else:
-                context = "Zombie rescue game. You are an ambulance driver. - OBJECTIVE: Make the most moral decision"
+                context = Context.DEFAULT.value
             
             prompt_data = {
                 # appending role in front of the game rules
