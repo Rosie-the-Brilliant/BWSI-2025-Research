@@ -11,7 +11,7 @@ import os
 import json
 from datetime import datetime
 import numpy as np
-from scipy.stats import f_oneway, levene
+#from scipy.stats import f_oneway, levene
 
 def get_role_color_map():
     """Define colors for different roles"""
@@ -143,17 +143,12 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     legend_handles.append(plt.Line2D([0], [0], marker='o', color='gray', 
                                     markersize=8, linestyle='None', label='Images'))
     
-    #axes[0].legend(handles=legend_handles, loc='lower left')
-    box = axes[0].get_position()
-    axes[0].set_position([box.x0, box.y0, box.width * 0.8, box.height])  # Shrink plot to make space
 
     axes[0].legend(
         handles=legend_handles,
         loc='center left',
         bbox_to_anchor=(1.0, 0.5),   # Push legend outside to the right center
-        frameon=False                # Optional: remove box
     )
-
 
     axes[0].set_title('Final Reward by Run')
     axes[0].set_xlabel('Run ID')
@@ -203,14 +198,7 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     # Add diagonal line (reward = 0)
     max_val = max(max(saved_counts), max(killed_counts))
     axes[1].plot([0, max_val], [0, max_val], 'k--', alpha=0.5, label='Reward = 0')
-    
-    legend_roles = df['role'].unique()
-    handles = [plt.Line2D([0], [0], marker='o', color='w',
-                markerfacecolor=role_colors.get(role, role_colors['default']),
-                label=role.capitalize(), markersize=8)
-                for role in legend_roles]
 
-    axes[1].legend(handles=handles, loc='best', title='Role')
     
     # 3. Overlapping line graphs for action frequencies over run number
     action_names = ["SQUISH", "SAVE", "SKIP", "SCRAM"]
@@ -225,20 +213,20 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     axes[2].set_title('Action Frequencies by Run')
     axes[2].set_xlabel('Run ID')
     axes[2].set_ylabel('Count')
-    axes[2].legend(title='Action')
+    axes[2].legend(title='Action', bbox_to_anchor=(1.0, 0.5),)
     axes[2].grid(True, alpha=0.3)
     print_action_frequencies_by_state(performance_data, axes)
-    #Save the plot
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    plot_file = os.path.join(save_dir, f"performance_graph_{timestamp}.png")
-    plt.tight_layout()
-    plt.savefig(plot_file, dpi=300, bbox_inches='tight')
-    plt.close()
+    # #Save the plot
+    # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    # plot_file = os.path.join(save_dir, f"performance_graph_{timestamp}.png")
+    # plt.tight_layout()
+    # plt.savefig(plot_file, dpi=300, bbox_inches='tight')
+    # plt.close()
     
-    print(f"📊 Performance graphs saved to: {plot_file}")
+    # print(f"📊 Performance graphs saved to: {plot_file}")
     
-    #Also save a summary CSV
-    save_summary_csv(performance_data, save_dir)
+    # #Also save a summary CSV
+    # save_summary_csv(performance_data, save_dir)
 
 def save_summary_csv(performance_data, save_dir):
     """Save a summary CSV of all runs"""
@@ -438,10 +426,11 @@ def print_action_frequencies_by_state(performance_data, axes):
         print(f"\n🧠 Role: {role}")
         for state, actions in states.items():
             print(f"  🧍 State: {state}")
-            total = role_humanoid_total_actions[role][stage.get("humanoid_state")]
+            total = role_humanoid_total_actions[role][state]
             for action, count in actions.items():
                 percentage = (count / total) * 100 if total > 0 else 0
                 print(f"    🔹 {action}: {count} ({percentage:.1f}%)")
+
 
 def clear_performance_data(save_dir="performance_logs"):
     """Clear all performance data"""
