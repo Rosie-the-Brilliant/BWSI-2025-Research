@@ -216,7 +216,8 @@ def generate_graphs(performance_data, save_dir="performance_logs"):
     axes[2].legend(title='Action', bbox_to_anchor=(1.0, 0.5),)
     axes[2].grid(True, alpha=0.3)
     print_action_frequencies_by_state(performance_data, axes)
-    # #Save the plot
+    
+    ############################## Save the plot  ###########################################
     # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     # plot_file = os.path.join(save_dir, f"performance_graph_{timestamp}.png")
     # plt.tight_layout()
@@ -474,7 +475,7 @@ def main():
     print("="*40)
     
     # Load performance data
-    performance_data = load_performance_data(path=None)
+    performance_data = load_performance_data(path="openai final not obey.json")
     if not performance_data:
         return
     
